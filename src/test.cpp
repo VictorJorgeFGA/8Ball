@@ -19,12 +19,17 @@ void Test::graphicsTest()
 {
     std::cout << "Graphics tests:" << std::endl;
     
-    Graphics::startUp("Test");
+    Graphics::startUp("Test", 720, 480, "assets/default_icon.png");
 
     Graphics * graphics = Graphics::getInstance(); 
     
     SDL_Rect rectangle {graphics->getWindowWidth() / 2 - 25, graphics->getWindowHeight() / 2 - 25, 50, 50};
     
+    graphics->maximizeWindow();
+    graphics->clearScreen();
+    graphics->updateScreen();
+    SDL_Delay(1000);
+
     graphics->clearScreen();
     graphics->setDrawColor(0xFF, 0x0, 0x0);
     graphics->drawRectangle(&rectangle);
@@ -55,22 +60,7 @@ void Test::graphicsTest()
     graphics->updateScreen();
     SDL_Delay(1000);
 
-    graphics->clearScreen();
-    graphics->updateScreen();
-    graphics->minimizeWindow();
-    SDL_Delay(1000);
-
-    graphics->maximizeWindow();
-    graphics->clearScreen();
-    graphics->updateScreen();
-    SDL_Delay(2000);
-
     graphics->setFullScreenMode();
-    graphics->clearScreen();
-    graphics->updateScreen();
-    SDL_Delay(2000);
-
-    graphics->setWindowedMode();
     graphics->clearScreen();
     graphics->updateScreen();
     SDL_Delay(2000);
@@ -79,6 +69,16 @@ void Test::graphicsTest()
     SDL_Delay(3000);
 
     graphics->showCursor();
+    SDL_Delay(1000);
+
+    graphics->setWindowedMode();
+    graphics->clearScreen();
+    graphics->updateScreen();
+    SDL_Delay(2000);
+
+    graphics->clearScreen();
+    graphics->updateScreen();
+    graphics->minimizeWindow();
     SDL_Delay(1000);
 
     Graphics::shutDown();

@@ -3,20 +3,23 @@
 #include <stdexcept>
 #include <iostream>
 
-Graphics * Graphics::_instance = nullptr;
+Graphics * Graphics::_instance = NULL;
 bool Graphics::_started_up = false;
 
-void Graphics::startUp(const char * window_title, uint16_t window_width, uint16_t window_height)
+void Graphics::startUp(const char * window_title, uint16_t window_width, uint16_t window_height, const char * icon_path)
 {
     if (_started_up)
         return;
 
     _started_up = true;
-    if (SDL_InitSubSystem(SDL_INIT_VIDEO) != 0) {
-        std::cerr << "Unable to initialize SDL video subsystem." << " Error: " << SDL_GetError() << std::endl;
-        throw std::runtime_error("Graphics Exception");
-    }
-    _instance = new Graphics(window_title, window_width, window_height);
+    if (SDL_InitSubSystem(SDL_INIT_VIDEO) != 0)
+        throw_sdl_exception("Unable to initialize SDL video subsystem.");
+
+    int img_flags = (IMG_INIT_JPG | IMG_INIT_PNG);
+    if (IMG_Init(img_flags) != img_flags)
+        throw_img_exception("Unable to initialize PNG or JPG image system");
+
+    _instance = new Graphics(window_title, window_width, window_height, icon_path);
 }
 
 void Graphics::shutDown()
@@ -76,13 +79,13 @@ void Graphics::minimizeWindow()
 void Graphics::setFullScreenMode()
 {
     if (SDL_SetWindowFullscreen(_window, SDL_WINDOW_FULLSCREEN) != 0)
-        throw_exception("Unable to set full screen mode");
+        throw_sdl_exception("Unable to set full screen mode");
 }
 
 void Graphics::setWindowedMode()
 {
     if (SDL_SetWindowFullscreen(_window, 0) != 0)
-        throw_exception("Unable to set windowed mode");
+        throw_sdl_exception("Unable to set windowed mode");
 }
 
 uint16_t Graphics::getWindowWidth() const
@@ -99,21 +102,43 @@ uint16_t Graphics::getWindowHeight() const
     return uint16_t(_h);
 }
 
-void Graphics::throw_exception(const char * msg)
+SDL_Surface * Graphics::loadImage(const char * img_path) const
+{
+    SDL_Surface * image = IMG_Load(img_path);
+    if (image == NULL) {
+        std::cerr << "Unable to load the image " << img_path << ". Error: " << IMG_GetError() << std::endl;
+        throw std::runtime_error("Graphics Exception");
+    }
+    return image;
+}
+
+void Graphics::throw_sdl_exception(const char * msg)
 {
     std::cerr << msg << " Error: " << SDL_GetError() << std::endl;
     throw std::runtime_error("Graphics Exception");
 }
 
-Graphics::Graphics(const char * window_title, uint16_t window_width, uint16_t window_height)
+void Graphics::throw_img_exception(const char * msg)
+{
+    std::cerr << msg << " Error: " << IMG_GetError() << std::endl;
+    throw std::runtime_error("Graphics Exception");
+}
+
+Graphics::Graphics(const char * window_title, uint16_t window_width, uint16_t window_height, const char * icon_path)
 {
     _window = SDL_CreateWindow(window_title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_width, window_height, SDL_WINDOW_SHOWN);
     if (_window == NULL)
-        throw_exception("Unable to create SDL_window.");
+        throw_sdl_exception("Unable to create SDL_window.");
+
+    if (icon_path != NULL) {
+        SDL_Surface * icon = loadImage(icon_path);
+        SDL_SetWindowIcon(_window, icon);
+        SDL_FreeSurface(icon);
+    }
 
     _renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED);
     if (_renderer == NULL)
-        throw_exception("Unable to create SDL_renderer.");
+        throw_sdl_exception("Unable to create SDL_renderer.");
 
     setDrawColor(0xFF, 0xFF, 0xFF);
     clearScreen();
