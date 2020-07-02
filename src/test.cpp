@@ -1,6 +1,8 @@
 #include "Everything.hpp"
 #include "test.hpp"
 #include <iostream>
+#include <vector>
+#include <functional>
 
 void Test::runTest()
 {
@@ -20,68 +22,53 @@ void Test::graphicsTest()
     std::cout << "Graphics tests:" << std::endl;
     
     Graphics::startUp("Test", 720, 480, "assets/default_icon.png");
-
     Graphics * graphics = Graphics::getInstance(); 
-    
     SDL_Rect rectangle {graphics->getWindowWidth() / 2 - 25, graphics->getWindowHeight() / 2 - 25, 50, 50};
     
-    graphics->maximizeWindow();
-    graphics->clearScreen();
-    graphics->updateScreen();
-    SDL_Delay(1000);
-
-    graphics->clearScreen();
-    graphics->setDrawColor(0xFF, 0x0, 0x0);
-    graphics->drawRectangle(&rectangle);
-    graphics->updateScreen();
-    SDL_Delay(1000);
-
-    graphics->clearScreen();
-    graphics->setDrawColor(0x0, 0xFF, 0x0);
-    graphics->drawRectangle(&rectangle);
-    graphics->updateScreen();
-    SDL_Delay(1000);
-
-    graphics->clearScreen();
-    graphics->setDrawColor(0x0, 0x0, 0xFF);
-    graphics->drawRectangle(&rectangle);
-    graphics->updateScreen();
-    SDL_Delay(1000);
-
-    graphics->clearScreen();
-    graphics->setDrawColor(0xFF, 0xFF, 0x0);
-    graphics->drawRectangle(&rectangle);
-    graphics->updateScreen();
-    SDL_Delay(1000);
-
-    graphics->clearScreen();
-    graphics->setDrawColor(0xFF, 0x0, 0xFF);
-    graphics->drawRectangle(&rectangle);
-    graphics->updateScreen();
-    SDL_Delay(1000);
-
-    graphics->setFullScreenMode();
-    graphics->clearScreen();
-    graphics->updateScreen();
-    SDL_Delay(2000);
-
-    graphics->hideCursor();
-    SDL_Delay(3000);
-
-    graphics->showCursor();
-    SDL_Delay(1000);
-
-    graphics->setWindowedMode();
-    graphics->clearScreen();
-    graphics->updateScreen();
-    SDL_Delay(2000);
-
-    graphics->clearScreen();
-    graphics->updateScreen();
-    graphics->minimizeWindow();
-    SDL_Delay(1000);
+    std::vector<std::function<void()>> micro_tests {
+        [&]() {
+            graphics->setDrawColor(0x0, 0xFF, 0x0);
+            graphics->drawRectangle(&rectangle);
+        },
+        [&]() {
+            graphics->setDrawColor(0x0, 0x0, 0xFF);
+            graphics->drawRectangle(&rectangle);
+        },
+        [&]() {
+            graphics->setDrawColor(0xFF, 0x0, 0x0);
+            graphics->drawRectangle(&rectangle);
+        },
+        [&] () {
+            graphics->setDrawColor(0xFF, 0xFF, 0x0);
+            graphics->drawRectangle(&rectangle);
+        },
+        [&] () {
+            graphics->setFullScreenMode();
+        },
+        [&] () {
+            graphics->setWindowedMode();
+        },
+        [&] () {
+            graphics->hideCursor();
+        },
+        [&] () {
+            graphics->showCursor();
+        },
+        [&] () {
+            graphics->maximizeWindow();
+        }
+    };
+    
+    for (auto test : micro_tests) {
+        int32_t initial_ticks = SDL_GetTicks();
+        while (int32_t(SDL_GetTicks()) - initial_ticks <= 1000) {
+            graphics->clearScreen();
+            test();
+            graphics->updateScreen();
+            SDL_Delay(16);
+        }
+    }
 
     Graphics::shutDown();
-
     std::cout << '\t' << "Ok" << std::endl;
 }

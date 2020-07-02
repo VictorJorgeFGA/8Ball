@@ -1,9 +1,14 @@
 #include "test.hpp"
 #include "Everything.hpp"
 
+#define TEST
+
 int main(int argc, char * argv[])
 {
-    //Test::runTest();
+#ifdef TEST
+    Test::runTest();
+    
+#else
     Graphics::startUp("8 Ball", 720, 480, "assets/default_icon.png");
     Graphics * gr = Graphics::getInstance();
 
@@ -47,5 +52,7 @@ int main(int argc, char * argv[])
     }
 
     Graphics::shutDown();
+
+#endif
     return 0;
 }
