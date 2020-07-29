@@ -3,6 +3,7 @@
 
 #include "SDL.hpp"
 #include <stdint.h>
+#include <string>
 
 class Graphics
 {
@@ -28,11 +29,14 @@ public:
     uint16_t getWindowWidth() const;
     uint16_t getWindowHeight() const;
 
-    SDL_Surface * loadImage(const char * img_path) const;
+    SDL_Texture * loadTexture(const char * img_path);
+    void drawTexture(SDL_Texture * texture, SDL_Rect * drawing_area);
 
 private:
     static Graphics * _instance;
     static bool _started_up;
+
+    SDL_Surface * loadImage(const char * img_path) const;
 
     static void throw_sdl_exception(const char * msg);
     static void throw_img_exception(const char * msg);

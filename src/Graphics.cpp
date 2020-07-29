@@ -2,6 +2,7 @@
 #include "SDL.hpp"
 #include <stdexcept>
 #include <iostream>
+#include <string> 
 
 Graphics * Graphics::_instance = NULL;
 bool Graphics::_started_up = false;
@@ -101,6 +102,30 @@ uint16_t Graphics::getWindowHeight() const
     SDL_GetWindowSize(_window, &_w, &_h);
     return uint16_t(_h);
 }
+
+SDL_Texture * Graphics::loadTexture(const char * img_path)
+{
+    SDL_Surface * temp_surface = loadImage(img_path);
+    SDL_Texture * texture = SDL_CreateTextureFromSurface(_renderer, loadImage(img_path));
+    SDL_FreeSurface(temp_surface);
+
+    if (texture == NULL) {
+        std::cerr << "Unable to create texture from surface. Error: " << SDL_GetError() << std::endl; 
+        throw_sdl_exception("Graphics Exception");
+    }
+    return texture;
+}
+
+void Graphics::drawTexture(SDL_Texture * texture, SDL_Rect * drawing_area)
+{
+    SDL_RenderCopy(_renderer, texture, NULL, drawing_area);
+}
+
+// // // // // // // // // // // // // // // // // // //
+//
+// INTERNAL FUNCTIONS
+//
+//
 
 SDL_Surface * Graphics::loadImage(const char * img_path) const
 {

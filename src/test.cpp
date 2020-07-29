@@ -25,6 +25,8 @@ void Test::graphicsTest()
     Graphics * graphics = Graphics::getInstance(); 
     SDL_Rect rectangle {graphics->getWindowWidth() / 2 - 25, graphics->getWindowHeight() / 2 - 25, 50, 50};
     
+    SDL_Texture * texture_example = graphics->loadTexture("assets/default_icon.png");
+
     std::vector<std::function<void()>> micro_tests {
         [&]() {
             graphics->setDrawColor(0x0, 0xFF, 0x0);
@@ -38,24 +40,12 @@ void Test::graphicsTest()
             graphics->setDrawColor(0xFF, 0x0, 0x0);
             graphics->drawRectangle(&rectangle);
         },
-        [&] () {
+        [&]() {
             graphics->setDrawColor(0xFF, 0xFF, 0x0);
             graphics->drawRectangle(&rectangle);
         },
-        [&] () {
-            graphics->setFullScreenMode();
-        },
-        [&] () {
-            graphics->setWindowedMode();
-        },
-        [&] () {
-            graphics->hideCursor();
-        },
-        [&] () {
-            graphics->showCursor();
-        },
-        [&] () {
-            graphics->maximizeWindow();
+        [&]() {
+            graphics->drawTexture(texture_example, &rectangle);
         }
     };
     
@@ -69,6 +59,7 @@ void Test::graphicsTest()
         }
     }
 
+    SDL_DestroyTexture(texture_example);
     Graphics::shutDown();
     std::cout << '\t' << "Ok" << std::endl;
 }
