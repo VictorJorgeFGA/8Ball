@@ -20,6 +20,9 @@ void Graphics::startUp(const char * window_title, uint16_t window_width, uint16_
     if (IMG_Init(img_flags) != img_flags)
         throw_img_exception("Unable to initialize PNG or JPG image system");
 
+    if (TTF_Init() == -1)
+        throw_ttf_exception("Unable to initialize TTF system");
+
     _instance = new Graphics(window_title, window_width, window_height, icon_path);
 }
 
@@ -27,6 +30,8 @@ void Graphics::shutDown()
 {
     _started_up = false;
     delete _instance;
+    TTF_Quit();
+    IMG_Quit();
     SDL_Quit();
 }
 
@@ -103,6 +108,16 @@ uint16_t Graphics::getWindowHeight() const
     return uint16_t(_h);
 }
 
+TTF_Font * Graphics::loadFont(const std::string & font_path, uint8_t font_size) const
+{
+    return TTF_OpenFont(font_path.c_str(), font_size);
+}
+
+void Graphics::unloadFont(TTF_Font * font) const
+{
+    TTF_CloseFont(font);
+}
+
 SDL_Texture * Graphics::loadTexture(const char * img_path)
 {
     SDL_Surface * temp_surface = loadImage(img_path);
@@ -116,9 +131,25 @@ SDL_Texture * Graphics::loadTexture(const char * img_path)
     return texture;
 }
 
+SDL_Texture * Graphics::createTextTexture(TTF_Font * font, const std::string & text, SDL_Color color)
+{
+    SDL_Surface * temp_surface = TTF_RenderText_Solid(font, text.c_str(), color);
+    SDL_Texture * texture = SDL_CreateTextureFromSurface(_renderer, temp_surface);
+    
+    SDL_FreeSurface(temp_surface);
+    temp_surface = nullptr;
+
+    return texture;
+}
+
 void Graphics::drawTexture(SDL_Texture * texture, SDL_Rect * drawing_area)
 {
     SDL_RenderCopy(_renderer, texture, NULL, drawing_area);
+}
+
+void Graphics::unloadTexture(SDL_Texture * texture) const
+{
+    SDL_DestroyTexture(texture);
 }
 
 // // // // // // // // // // // // // // // // // // //
@@ -147,6 +178,12 @@ void Graphics::throw_img_exception(const char * msg)
 {
     std::cerr << msg << " Error: " << IMG_GetError() << std::endl;
     throw std::runtime_error("Graphics Exception");
+}
+
+void Graphics::throw_ttf_exception(const char * msg)
+{
+    std::cerr << msg << "Error: " << TTF_GetError() << std::endl;
+    throw std::runtime_error("TTF Exception");
 }
 
 Graphics::Graphics(const char * window_title, uint16_t window_width, uint16_t window_height, const char * icon_path)

@@ -26,6 +26,8 @@ void Test::graphicsTest()
     SDL_Rect rectangle {graphics->getWindowWidth() / 2 - 25, graphics->getWindowHeight() / 2 - 25, 50, 50};
     
     SDL_Texture * texture_example = graphics->loadTexture("assets/default_icon.png");
+    TTF_Font * font = graphics->loadFont("assets/sony_sketch.ttf", 64);
+    SDL_Texture * text = graphics->createTextTexture(font, "Test");
 
     std::vector<std::function<void()>> micro_tests {
         [&]() {
@@ -46,6 +48,9 @@ void Test::graphicsTest()
         },
         [&]() {
             graphics->drawTexture(texture_example, &rectangle);
+        },
+        [&]() {
+            graphics->drawTexture(text, NULL);
         }
     };
     
@@ -59,7 +64,8 @@ void Test::graphicsTest()
         }
     }
 
-    SDL_DestroyTexture(texture_example);
+    graphics->unloadFont(font);
+    graphics->unloadTexture(texture_example);
     Graphics::shutDown();
     std::cout << '\t' << "Ok" << std::endl;
 }
