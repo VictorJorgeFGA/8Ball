@@ -8,6 +8,7 @@ public:
 
 private:
     static void graphicsTest();
+    static void timerTest();
 };
 
 #endif
