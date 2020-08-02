@@ -3,11 +3,13 @@
 #include <iostream>
 #include <vector>
 #include <functional>
+#include <string>
 
 void Test::runTest()
 {
     try {
         graphicsTest();
+        timerTest();
         std::cout << "\t\033[0;32mTests passed!\033[0m" << std::endl;
     }
     catch (std::runtime_error & e) {
@@ -68,5 +70,42 @@ void Test::graphicsTest()
     graphics->unloadTexture(texture_example);
     graphics->unloadFont(font);
     Graphics::shutDown();
+    std::cout << '\t' << "Ok" << std::endl;
+}
+
+void Test::timerTest()
+{
+    std::cout << "Timer tests:" << std::endl;
+
+    Timer timer;
+
+    std::cout << "\tTest (1.0x):" << std::endl;
+    SDL_Delay(1000);
+    float elapsed_time = timer.getElapsedTime();
+    if (elapsed_time > 1.05f || elapsed_time < 0.95f)
+        throw std::runtime_error("Timer test failed! Values expected > 0.95, < 1.05. Value received:" + std::to_string(elapsed_time));
+    std::cout << "\t\t" << elapsed_time << std::endl;
+    
+
+    std::cout << "\tTest (2.0x):" << std::endl;
+    timer.setTimeScale(2.0f);
+    timer.reset();
+    SDL_Delay(1000);
+    elapsed_time = timer.getElapsedTime();
+    if (elapsed_time > 2.05f || elapsed_time < 1.95f)
+        throw std::runtime_error("Timer test failed! Values expected > 1.95, < 2.05. Value received:" + std::to_string(elapsed_time));
+    std::cout << "\t\t" << elapsed_time << std::endl;
+
+
+    std::cout << "\tTest (0.5x):" << std::endl;
+    timer.setTimeScale(0.5f);
+    timer.reset();
+    SDL_Delay(1000);
+    elapsed_time = timer.getElapsedTime();
+    if (elapsed_time > 0.55f || elapsed_time < 0.45f)
+        throw std::runtime_error("Timer test failed! Values expected > 0.45, < 0.55. Value received:" + std::to_string(elapsed_time));
+    std::cout << "\t\t" << elapsed_time << std::endl;
+
+
     std::cout << '\t' << "Ok" << std::endl;
 }
