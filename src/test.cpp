@@ -64,8 +64,9 @@ void Test::graphicsTest()
         }
     }
 
-    graphics->unloadFont(font);
+    graphics->unloadTexture(text);
     graphics->unloadTexture(texture_example);
+    graphics->unloadFont(font);
     Graphics::shutDown();
     std::cout << '\t' << "Ok" << std::endl;
 }
