@@ -131,6 +131,11 @@ SDL_Texture * Graphics::loadTexture(const char * img_path)
     return texture;
 }
 
+SDL_Texture * Graphics::loadTexture(const std::string & img_path)
+{
+    return loadTexture(img_path.c_str());
+}
+
 SDL_Texture * Graphics::createTextTexture(TTF_Font * font, const std::string & text, SDL_Color color)
 {
     SDL_Surface * temp_surface = TTF_RenderText_Solid(font, text.c_str(), color);
