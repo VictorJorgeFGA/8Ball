@@ -9,6 +9,7 @@ public:
 private:
     static void graphicsTest();
     static void timerTest();
+    static void assetsManagerTest();
 };
 
 #endif
