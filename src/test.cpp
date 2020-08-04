@@ -10,6 +10,7 @@ void Test::runTest()
     try {
         graphicsTest();
         timerTest();
+        assetsManagerTest();
         std::cout << "\t\033[0;32mTests passed!\033[0m" << std::endl;
     }
     catch (std::runtime_error & e) {
@@ -106,6 +107,52 @@ void Test::timerTest()
         throw std::runtime_error("Timer test failed! Values expected > 0.45, < 0.55. Value received:" + std::to_string(elapsed_time));
     std::cout << "\t\t" << elapsed_time << std::endl;
 
+
+    std::cout << '\t' << "Ok" << std::endl;
+}
+
+void Test::assetsManagerTest()
+{
+    std::cout << "Assets Manager tests:" << std::endl;
+
+    Graphics::startUp();
+    Graphics * graphics = Graphics::getInstance();
+
+    AssetsManager * am = AssetsManager::getInstance();
+    SDL_Texture * texture_example = am->getTexture("default_icon.png");
+    SDL_Texture * text_example = am->getTextTexture("sony_sketch.ttf", 32, "assets_test");
+
+    SDL_Rect draw_area {50, 50, 100, 100};
+
+    graphics->clearScreen();
+    graphics->drawTexture(texture_example, &draw_area);
+    graphics->updateScreen();
+    SDL_Delay(1000);
+
+    graphics->clearScreen();
+    graphics->drawTexture(text_example, &draw_area);
+    graphics->updateScreen();
+    SDL_Delay(1000);
+
+    graphics->clearScreen();
+    graphics->drawTexture(am->getTexture("default_icon.png"), &draw_area);
+    graphics->updateScreen();
+    SDL_Delay(1000);
+
+    graphics->clearScreen();
+    graphics->drawTexture(am->getTextTexture("sony_sketch.ttf", 32, "8BALL", {255, 126, 0, 255}), &draw_area);
+    graphics->updateScreen();
+    SDL_Delay(1000);
+
+    /* Not necessary because of AssetsManager destructor
+    
+    graphics->unloadTexture(texture_example);
+    graphics->unloadTexture(text_example);
+    
+    */
+
+    AssetsManager::shutDown();
+    Graphics::shutDown();
 
     std::cout << '\t' << "Ok" << std::endl;
 }

@@ -110,7 +110,12 @@ uint16_t Graphics::getWindowHeight() const
 
 TTF_Font * Graphics::loadFont(const std::string & font_path, uint8_t font_size) const
 {
-    return TTF_OpenFont(font_path.c_str(), font_size);
+    TTF_Font * font = TTF_OpenFont(font_path.c_str(), font_size);
+    if (font == NULL) {
+        std::string msg = "Unable to load font " +  font_path;
+        throw_ttf_exception(msg.c_str());
+    }
+    return font;
 }
 
 void Graphics::unloadFont(TTF_Font * font) const
@@ -125,17 +130,31 @@ SDL_Texture * Graphics::loadTexture(const char * img_path)
     SDL_FreeSurface(temp_surface);
 
     if (texture == NULL) {
-        std::cerr << "Unable to create texture from surface. Error: " << SDL_GetError() << std::endl; 
-        throw_sdl_exception("Graphics Exception");
+        throw_sdl_exception("Unable to create texture from surface.");
     }
     return texture;
 }
 
+SDL_Texture * Graphics::loadTexture(const std::string & img_path)
+{
+    return loadTexture(img_path.c_str());
+}
+
 SDL_Texture * Graphics::createTextTexture(TTF_Font * font, const std::string & text, SDL_Color color)
 {
+
     SDL_Surface * temp_surface = TTF_RenderText_Solid(font, text.c_str(), color);
+    if (temp_surface == NULL) {
+        std::string msg = "Unable to make solid text render for text \"" + text + "\"";
+        throw_ttf_exception(msg.c_str());
+    }
+
     SDL_Texture * texture = SDL_CreateTextureFromSurface(_renderer, temp_surface);
-    
+    if (texture == NULL) {
+        std::string msg = "Unable to create text texture to text \"" + text + "\"";
+        throw_sdl_exception(msg.c_str());
+    }
+
     SDL_FreeSurface(temp_surface);
     temp_surface = nullptr;
 
@@ -144,7 +163,9 @@ SDL_Texture * Graphics::createTextTexture(TTF_Font * font, const std::string & t
 
 void Graphics::drawTexture(SDL_Texture * texture, SDL_Rect * drawing_area)
 {
-    SDL_RenderCopy(_renderer, texture, NULL, drawing_area);
+    if (SDL_RenderCopy(_renderer, texture, NULL, drawing_area) == -1) {
+        throw_sdl_exception("Unable to draw a texture");
+    }
 }
 
 void Graphics::unloadTexture(SDL_Texture * texture) const
@@ -162,8 +183,8 @@ SDL_Surface * Graphics::loadImage(const char * img_path) const
 {
     SDL_Surface * image = IMG_Load(img_path);
     if (image == NULL) {
-        std::cerr << "Unable to load the image " << img_path << ". Error: " << IMG_GetError() << std::endl;
-        throw std::runtime_error("Graphics Exception");
+        std::string msg = "Unable to load the image " + std::string(img_path);
+        throw_img_exception(msg.c_str());
     }
     return image;
 }
