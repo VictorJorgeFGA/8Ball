@@ -2,3 +2,4 @@
 #include "Graphics.hpp"
 #include "Timer.hpp"
 #include "AssetsManager.hpp"
+#include "VisualComponent.hpp"
