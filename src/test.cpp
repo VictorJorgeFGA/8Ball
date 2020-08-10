@@ -11,6 +11,7 @@ void Test::runTest()
         graphicsTest();
         timerTest();
         assetsManagerTest();
+        visualComponentTest();
         std::cout << "\t\033[0;32mTests passed!\033[0m" << std::endl;
     }
     catch (std::runtime_error & e) {
@@ -153,6 +154,37 @@ void Test::assetsManagerTest()
 
     AssetsManager::shutDown();
     Graphics::shutDown();
+
+    std::cout << '\t' << "Ok" << std::endl;
+}
+
+void Test::visualComponentTest()
+{
+    std::cout << "Visual Component tests:" << std::endl;
+
+    VisualComponent parent, child;
+    child.setParent(&parent);
+    child.setX(10);
+    child.setY(10);
+    if (child.getX() != 10)
+        throw std::runtime_error("Visual Component X test failed! Expected 10, received: " + std::to_string(child.getX()));
+    else if (child.getY() != 10)
+        throw std::runtime_error("Visual Component Y test failed! Expected 10, received: " + std::to_string(child.getY()));
+    
+    parent.setX(100);
+    parent.setY(200);
+
+    child.setHeight(50);
+    child.setWidth(50);
+
+    if (child.getX() != 110)
+        throw std::runtime_error("Visual Component X test 2 failed! Expected 110, received: " + std::to_string(child.getX()));
+    else if (child.getY() != 210)
+        throw std::runtime_error("Visual Component Y test 2 failed! Expected 210, received: " + std::to_string(child.getY()));
+    else if (child.getWidth() != 50)
+        throw std::runtime_error("Visual Component Widht test failed! Expected 50, received: " + std::to_string(child.getWidth()));
+    else if (child.getHeight() != 50)
+        throw std::runtime_error("Visual Component Height test failed! Expected 50, received: " + std::to_string(child.getHeight()));
 
     std::cout << '\t' << "Ok" << std::endl;
 }
