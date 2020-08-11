@@ -19,6 +19,7 @@ public:
     void updateScreen();
     void setDrawColor(uint8_t r, uint8_t g, uint8_t b);
     void drawRectangle(const SDL_Rect * rectangle);
+    void drawRectangle(SDL_Rect rectangle);
     void hideCursor() const;
     void showCursor() const;
     void maximizeWindow();
@@ -36,6 +37,7 @@ public:
     SDL_Texture * loadTexture(const std::string & img_path);
     SDL_Texture * createTextTexture(TTF_Font * font, const std::string & text, SDL_Color color = {0,0,0,0});
     void drawTexture(SDL_Texture * texture, SDL_Rect * drawing_area);
+    void drawTexture(SDL_Texture * texture, SDL_Rect drawing_area);
     void unloadTexture(SDL_Texture * texture) const;
 
 private:

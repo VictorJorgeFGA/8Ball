@@ -62,6 +62,11 @@ void Graphics::drawRectangle(const SDL_Rect * rectangle)
     SDL_RenderFillRect(_renderer, rectangle);
 }
 
+void Graphics::drawRectangle(SDL_Rect rectangle)
+{
+    drawRectangle(&rectangle);
+}
+
 void Graphics::hideCursor() const
 {
     SDL_ShowCursor(SDL_DISABLE);
@@ -166,6 +171,11 @@ void Graphics::drawTexture(SDL_Texture * texture, SDL_Rect * drawing_area)
     if (SDL_RenderCopy(_renderer, texture, NULL, drawing_area) == -1) {
         throw_sdl_exception("Unable to draw a texture");
     }
+}
+
+void Graphics::drawTexture(SDL_Texture * texture, SDL_Rect drawing_area)
+{
+    drawTexture(texture, &drawing_area);
 }
 
 void Graphics::unloadTexture(SDL_Texture * texture) const

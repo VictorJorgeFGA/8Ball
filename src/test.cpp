@@ -44,17 +44,20 @@ void Test::graphicsTest()
         },
         [&]() {
             graphics->setDrawColor(0xFF, 0x0, 0x0);
-            graphics->drawRectangle(&rectangle);
+            graphics->drawRectangle(rectangle);
         },
         [&]() {
             graphics->setDrawColor(0xFF, 0xFF, 0x0);
-            graphics->drawRectangle(&rectangle);
+            graphics->drawRectangle(rectangle);
         },
         [&]() {
             graphics->drawTexture(texture_example, &rectangle);
         },
         [&]() {
             graphics->drawTexture(text, NULL);
+        },
+        [&]() {
+            graphics->drawTexture(text, rectangle);
         }
     };
     
@@ -162,29 +165,58 @@ void Test::visualComponentTest()
 {
     std::cout << "Visual Component tests:" << std::endl;
 
-    VisualComponent parent, child;
-    child.setParent(&parent);
-    child.setX(10);
-    child.setY(10);
-    if (child.getX() != 10)
-        throw std::runtime_error("Visual Component X test failed! Expected 10, received: " + std::to_string(child.getX()));
-    else if (child.getY() != 10)
-        throw std::runtime_error("Visual Component Y test failed! Expected 10, received: " + std::to_string(child.getY()));
+    Graphics::startUp();
+    Graphics * graphics = Graphics::getInstance();
+    AssetsManager * am = AssetsManager::getInstance();
+
+    VisualComponent background, ball6, ball9, ball11;
+    background.setWidth(210);
+    background.setHeight(210);
+    background.setGlobalX((graphics->getWindowWidth() / 2) - 105);
+    background.setGlobalY((graphics->getWindowHeight() / 2) - 105);
+    background.setTexture(am->getTexture("wood.png"));
+
+    background.addChild(&ball6);
+    background.addChild(&ball9);
+    background.addChild(&ball11);
+    // trying to duplicate ball11
+    background.addChild(&ball11);
+
+    std::vector<VisualComponent *> vcs = background.getChildren();
+    if ((int32_t) vcs.size() != 3)
+        throw std::runtime_error("Visual Component children vector size test failed. Expected size 3, received " + std::to_string(vcs.size()));
+
+    ball6.setParent(&background);
+    ball6.setTexture(am->getTexture("ball6_test.png"));
+    ball6.setWidth(60);
+    ball6.setHeight(60);
+    ball6.setRelativeX(10);
+    ball6.setRelativeY(10);
+
+    ball9.setParent(&background);
+    ball9.setTexture(am->getTexture("ball9_test.png"));
+    ball9.setWidth(60);
+    ball9.setHeight(60);
+    ball9.setRelativeX(background.getWidth() - (ball9.getWidth() + 10));
+    ball9.setRelativeY(10);
+
+    ball11.setParent(&background);
+    ball11.setTexture(am->getTexture("ball11_test.png"));
+    ball11.setWidth(60);
+    ball11.setHeight(60);
+    ball11.setRelativeX(10);
+    ball11.setRelativeY(background.getHeight() - ball11.getHeight() - 10);
+
+    graphics->clearScreen();
+    graphics->drawTexture(background.getTexture(), background.getGlobalBody());
+    for (auto e : vcs)
+        graphics->drawTexture(e->getTexture(), e->getGlobalBody());
     
-    parent.setX(100);
-    parent.setY(200);
+    graphics->updateScreen();
+    SDL_Delay(2000);
 
-    child.setHeight(50);
-    child.setWidth(50);
-
-    if (child.getX() != 110)
-        throw std::runtime_error("Visual Component X test 2 failed! Expected 110, received: " + std::to_string(child.getX()));
-    else if (child.getY() != 210)
-        throw std::runtime_error("Visual Component Y test 2 failed! Expected 210, received: " + std::to_string(child.getY()));
-    else if (child.getWidth() != 50)
-        throw std::runtime_error("Visual Component Widht test failed! Expected 50, received: " + std::to_string(child.getWidth()));
-    else if (child.getHeight() != 50)
-        throw std::runtime_error("Visual Component Height test failed! Expected 50, received: " + std::to_string(child.getHeight()));
+    AssetsManager::shutDown();
+    Graphics::shutDown();
 
     std::cout << '\t' << "Ok" << std::endl;
 }
