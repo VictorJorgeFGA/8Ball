@@ -3,3 +3,5 @@
 #include "Timer.hpp"
 #include "AssetsManager.hpp"
 #include "VisualComponent.hpp"
+#include "SolidText.hpp"
+#include "SolidImage.hpp"

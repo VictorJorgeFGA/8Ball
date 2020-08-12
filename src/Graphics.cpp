@@ -178,6 +178,17 @@ void Graphics::drawTexture(SDL_Texture * texture, SDL_Rect drawing_area)
     drawTexture(texture, &drawing_area);
 }
 
+void Graphics::drawTexture(SDL_Texture * texture, SDL_Rect * drawing_area, double rotation_angle)
+{
+    if (SDL_RenderCopyEx(_renderer, texture, NULL, drawing_area, rotation_angle, NULL, SDL_FLIP_NONE) == -1)
+        throw_sdl_exception("Unable to draw a texture with rotation");
+}
+
+void Graphics::drawTexture(SDL_Texture * texture, SDL_Rect drawing_area, double rotation_angle)
+{
+    drawTexture(texture, &drawing_area, rotation_angle);
+}
+
 void Graphics::unloadTexture(SDL_Texture * texture) const
 {
     SDL_DestroyTexture(texture);

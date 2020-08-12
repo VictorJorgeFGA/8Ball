@@ -167,54 +167,56 @@ void Test::visualComponentTest()
 
     Graphics::startUp();
     Graphics * graphics = Graphics::getInstance();
-    AssetsManager * am = AssetsManager::getInstance();
+    VisualComponent::startUp();
+    VisualComponent::setVerboseMode();
+    AssetsManager::setVerboseMode();
 
-    VisualComponent background, ball6, ball9, ball11;
-    background.setWidth(210);
-    background.setHeight(210);
-    background.setGlobalX((graphics->getWindowWidth() / 2) - 105);
-    background.setGlobalY((graphics->getWindowHeight() / 2) - 105);
-    background.setTexture(am->getTexture("wood.png"));
+    SolidImage * background = SolidImage::newSolidImage("background_test.png", 210, 210),
+                    * ball6 = SolidImage::newSolidImage("ball6_test.png", 60, 60),
+                    * ball7 = SolidImage::newSolidImage("ball7_test.png", 60, 60),
+                    * ball8 = SolidImage::newSolidImage("ball8_test.png", 60, 60),
+                    * ball9 = SolidImage::newSolidImage("ball9_test.png", 60, 60);
 
-    background.addChild(&ball6);
-    background.addChild(&ball9);
-    background.addChild(&ball11);
-    // trying to duplicate ball11
-    background.addChild(&ball11);
+    SolidText * text = SolidText::newSolidText("Solid Text testing!", "sony_sketch.ttf", 32, {0, 0, 0, 0xff});
 
-    std::vector<VisualComponent *> vcs = background.getChildren();
-    if ((int32_t) vcs.size() != 3)
-        throw std::runtime_error("Visual Component children vector size test failed. Expected size 3, received " + std::to_string(vcs.size()));
+    ball6->setParent(background);
+    ball7->setParent(background);
+    ball8->setParent(background);
+    ball9->setParent(background);
 
-    ball6.setParent(&background);
-    ball6.setTexture(am->getTexture("ball6_test.png"));
-    ball6.setWidth(60);
-    ball6.setHeight(60);
-    ball6.setRelativeX(10);
-    ball6.setRelativeY(10);
+    if (background->countChildren() != 4)
+        throw std::runtime_error("Visual Component children vector size failed! Expected 4 children, got " + std::to_string(background->countChildren()));
+    else if (VisualComponent::getScreenObject()->countChildren() != 2)
+        throw std::runtime_error("SCREEN Visual Component children vector size failed! Expected 1, got " + std::to_string(VisualComponent::getScreenObject()->countChildren()));
 
-    ball9.setParent(&background);
-    ball9.setTexture(am->getTexture("ball9_test.png"));
-    ball9.setWidth(60);
-    ball9.setHeight(60);
-    ball9.setRelativeX(background.getWidth() - (ball9.getWidth() + 10));
-    ball9.setRelativeY(10);
+    text->setRelativeX(10); text->setRelativeY(10);
 
-    ball11.setParent(&background);
-    ball11.setTexture(am->getTexture("ball11_test.png"));
-    ball11.setWidth(60);
-    ball11.setHeight(60);
-    ball11.setRelativeX(10);
-    ball11.setRelativeY(background.getHeight() - ball11.getHeight() - 10);
+    background->setGlobalX(graphics->getWindowWidth() / 2 - 105);
+    background->setGlobalY(graphics->getWindowHeight() / 2 - 105);
+    background->setRotationAngle(45.0f);
 
-    graphics->clearScreen();
-    graphics->drawTexture(background.getTexture(), background.getGlobalBody());
-    for (auto e : vcs)
-        graphics->drawTexture(e->getTexture(), e->getGlobalBody());
-    
-    graphics->updateScreen();
-    SDL_Delay(2000);
+    ball6->setRelativeX(10); ball6->setRelativeY(10);
 
+    ball7->setRelativeX(background->getWidth() - ball7->getWidth() - 10);
+    ball7->setRelativeY(10);
+
+    ball8->setRelativeX(10);
+    ball8->setRelativeY(background->getHeight() - ball8->getHeight() - 10);
+
+    ball9->setRelativeX(background->getWidth() - ball9->getWidth() - 10);
+    ball9->setRelativeY(background->getHeight() - ball9->getHeight() - 10);
+
+    VisualComponent::drawComponents();
+    SDL_Delay(1200);
+
+    ball8->setParent(VisualComponent::getScreenObject());
+    ball7->hide();
+    text->setRotationAngle(20);
+
+    VisualComponent::drawComponents();
+    SDL_Delay(1200);
+
+    VisualComponent::shutDown();
     AssetsManager::shutDown();
     Graphics::shutDown();
 

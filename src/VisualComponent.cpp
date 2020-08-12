@@ -1,23 +1,74 @@
 #include "VisualComponent.hpp"
+#include "Graphics.hpp"
+#include <stdexcept>
+#include <iostream>
 
-VisualComponent::VisualComponent():
-_parent(nullptr),
-_children(),
-_texture(nullptr),
-_body({0,0,0,0}),
-_is_hide(false)
+VisualComponent * VisualComponent::SCREEN = nullptr;
+bool VisualComponent::VERBOSE = false;
+const std::string VisualComponent::VERBOSE_MSG = "\033[0;33m(VERBOSE) VisualComponent:\t\033[0m";
+Graphics * VisualComponent::graphics = nullptr;
+
+void VisualComponent::setVerboseMode()
 {
-
+    VERBOSE = true;
 }
 
-VisualComponent::~VisualComponent()
+void VisualComponent::startUp()
 {
+    if (SCREEN == nullptr) {
+        graphics = Graphics::getInstance();
+        SCREEN = new VisualComponent();
+        SCREEN->setWidth(graphics->getWindowWidth());
+        SCREEN->setHeight(graphics->getWindowHeight());
 
+        if (VERBOSE) std::cout << VERBOSE_MSG + "Starting up" << std::endl;
+    }
+    else
+        throw std::runtime_error("Attempt to startUp VisualComponent twice");
 }
 
-void VisualComponent::setParent(VisualComponent * parent)
+void VisualComponent::shutDown()
 {
-    _parent = parent;
+    if (SCREEN == nullptr)
+        throw std::runtime_error("Attempt to shutDown VisualComponent before initialization");
+    
+    delete SCREEN;
+    SCREEN = nullptr;
+    graphics = nullptr;
+
+    if (VERBOSE) std::cout << VERBOSE_MSG + "Shutting down\n" << std::endl; 
+}
+
+void VisualComponent::drawComponents()
+{
+    if (SCREEN == nullptr)
+        throw std::runtime_error("Attempt to draw VisualComponent objects before VisualComponent initialization");
+    
+    graphics->clearScreen();
+    SCREEN->draw();
+    graphics->updateScreen();
+}
+
+VisualComponent * VisualComponent::getScreenObject()
+{
+    if (SCREEN == nullptr)
+        throw std::runtime_error("Attempt to get VisualComponent::SCREEN object before VisualComponent initialization");
+    
+    return SCREEN;
+}
+
+void VisualComponent::setParent(VisualComponent * new_parent)
+{
+    if (new_parent == _parent)
+        return;
+    else if (new_parent == nullptr)
+        throw std::runtime_error("Attempt to set a VisualComponent parent as nullptr");
+
+    if (_parent != nullptr)
+        _parent->removeChild(this);
+
+    new_parent->addChild(this);
+    _parent = new_parent;
 }
 
 VisualComponent * VisualComponent::getParent()
@@ -25,13 +76,10 @@ VisualComponent * VisualComponent::getParent()
     return _parent;
 }
 
-void VisualComponent::addChild(VisualComponent * child)
+
+int32_t VisualComponent::countChildren() const
 {
-    for (auto e : _children) {
-        if (e == child)
-            return;
-    }
-    _children.push_back(child);
+    return (int32_t) _children.size();
 }
 
 std::vector<VisualComponent *> VisualComponent::getChildren() const
@@ -42,11 +90,15 @@ std::vector<VisualComponent *> VisualComponent::getChildren() const
 void VisualComponent::hide()
 {
     _is_hide = true;
+    for (auto child : _children)
+        child->hide();
 }
 
 void VisualComponent::show()
 {
     _is_hide = false;
+    for (auto child : _children)
+        child->show();
 }
 
 bool VisualComponent::isHide() const
@@ -141,4 +193,70 @@ int32_t VisualComponent::getHeight() const
 void VisualComponent::setHeight(int32_t height)
 {
     _body.h = height;
+}
+
+double VisualComponent::getRotationAngle() const
+{
+    return _rotation_angle;
+}
+
+void VisualComponent::setRotationAngle(double rotation_angle)
+{
+    _rotation_angle = rotation_angle;
+}
+
+void VisualComponent::draw()
+{
+    if (_texture != nullptr && !_is_hide)
+        graphics->drawTexture(_texture, getGlobalBody(), getRotationAngle());
+    
+    for (auto child : _children)
+        child->draw();
+}
+
+VisualComponent::VisualComponent():
+_parent(nullptr),
+_children(),
+_texture(nullptr),
+_body({0,0,0,0}),
+_is_hide(false),
+_rotation_angle(0.0f)
+{
+
+}
+
+VisualComponent::~VisualComponent()
+{
+    for (auto child : _children) {
+        
+        if (VERBOSE) {
+            std::cout << VERBOSE_MSG + "Deleting this component:" << std::endl;
+
+            graphics->clearScreen();
+            if (child->getTexture() != nullptr)
+                graphics->drawTexture(child->getTexture(), child->getGlobalBody());
+            graphics->updateScreen();
+            SDL_Delay(900);
+        }
+        
+        delete child;
+    }
+}
+
+void VisualComponent::addChild(VisualComponent * child)
+{
+    for (auto e : _children) {
+        if (e == child)
+            return;
+    }
+    _children.push_back(child);
+}
+
+void VisualComponent::removeChild(VisualComponent * child)
+{
+    auto iter = _children.begin();
+    for ( ; iter != _children.end(); iter++)
+        if (*iter == child) break;
+
+    _children.erase(iter);
 }

@@ -1,20 +1,26 @@
 #ifndef _VISUAL_COMPONENT_HPP_
 #define _VISUAL_COMPONENT_HPP_
 
+#include "Graphics.hpp"
 #include <SDL2/SDL.h>
 #include <vector>
+#include <string>
 
 class VisualComponent
 {
 public:
-    VisualComponent();
-    ~VisualComponent();
+    static void setVerboseMode();
 
-    void setParent(VisualComponent * parent);
+    static void startUp();
+    static void shutDown();
+    static void drawComponents();
+    static VisualComponent * getScreenObject();
+
+    void setParent(VisualComponent * new_parent);
     VisualComponent * getParent();
 
-    void addChild(VisualComponent * child);
     std::vector<VisualComponent *> getChildren() const;
+    int32_t countChildren() const;
 
     void hide();
     void show();
@@ -42,13 +48,30 @@ public:
     int32_t getHeight() const;
     void setHeight(int32_t height);
 
+    double getRotationAngle() const;
+    void setRotationAngle(double rotation_angle);
+
 private:
+    static VisualComponent * SCREEN;
+    static bool VERBOSE;
+    static const std::string VERBOSE_MSG;
+    static Graphics * graphics;
+
+    void draw();
+
+    void addChild(VisualComponent * child);
+    void removeChild(VisualComponent * child);
 
     VisualComponent * _parent;
     std::vector<VisualComponent *> _children;
     SDL_Texture * _texture;
     SDL_Rect _body;
     bool _is_hide;
+    double _rotation_angle;
+
+protected:
+    VisualComponent();
+    ~VisualComponent();
 };
 
 #endif

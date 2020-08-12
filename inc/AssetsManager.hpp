@@ -8,6 +8,8 @@
 class AssetsManager
 {
 public:
+    static void setVerboseMode();
+
     static AssetsManager * getInstance();
     static void shutDown();
 
@@ -23,6 +25,9 @@ private:
 
     std::map<std::string, SDL_Texture *> _textures;
     std::map<std::string, TTF_Font *> _fonts;
+
+    static bool VERBOSE;
+    static const std::string VERBOSE_MSG;
 };
 
 #endif 
