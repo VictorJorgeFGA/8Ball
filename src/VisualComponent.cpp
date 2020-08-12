@@ -5,6 +5,7 @@
 
 VisualComponent * VisualComponent::SCREEN = nullptr;
 bool VisualComponent::VERBOSE = false;
+const std::string VisualComponent::VERBOSE_MSG = "\033[0;33m(VERBOSE) VisualComponent:\t\033[0m";
 
 void VisualComponent::setVerboseMode()
 {
@@ -18,6 +19,8 @@ void VisualComponent::startUp()
         SCREEN = new VisualComponent();
         SCREEN->setWidth(g->getWindowWidth());
         SCREEN->setHeight(g->getWindowHeight());
+
+        if (VERBOSE) std::cout << VERBOSE_MSG + "Starting up" << std::endl;
     }
     else
         throw std::runtime_error("Attempt to startUp VisualComponent twice");
@@ -31,8 +34,7 @@ void VisualComponent::shutDown()
     delete SCREEN;
     SCREEN = nullptr;
 
-    if (VERBOSE)
-        std::cout << "\n\tVisualComponent ShutDown\n" << std::endl; 
+    if (VERBOSE) std::cout << VERBOSE_MSG + "Shutting down\n" << std::endl; 
 }
 
 void VisualComponent::drawComponents()
@@ -189,11 +191,21 @@ void VisualComponent::setHeight(int32_t height)
     _body.h = height;
 }
 
+double VisualComponent::getRotationAngle() const
+{
+    return _rotation_angle;
+}
+
+void VisualComponent::setRotationAngle(double rotation_angle)
+{
+    _rotation_angle = rotation_angle;
+}
+
 void VisualComponent::draw()
 {
     Graphics * graphics = Graphics::getInstance();
     if (_texture != nullptr && !_is_hide)
-        graphics->drawTexture(_texture, getGlobalBody());
+        graphics->drawTexture(_texture, getGlobalBody(), getRotationAngle());
     
     for (auto child : _children)
         child->draw();
@@ -204,7 +216,8 @@ _parent(nullptr),
 _children(),
 _texture(nullptr),
 _body({0,0,0,0}),
-_is_hide(false)
+_is_hide(false),
+_rotation_angle(0.0f)
 {
 
 }
@@ -214,7 +227,8 @@ VisualComponent::~VisualComponent()
     for (auto child : _children) {
         
         if (VERBOSE) {
-            std::cout << "\tDeleting VisualComponent:" << std::endl;
+            std::cout << VERBOSE_MSG + "Deleting this component:" << std::endl;
+            
             Graphics * g = Graphics::getInstance();
             g->clearScreen();
             if (child->getTexture() != nullptr)

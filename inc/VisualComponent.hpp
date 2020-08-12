@@ -47,9 +47,13 @@ public:
     int32_t getHeight() const;
     void setHeight(int32_t height);
 
+    double getRotationAngle() const;
+    void setRotationAngle(double rotation_angle);
+
 private:
     static VisualComponent * SCREEN;
     static bool VERBOSE;
+    static const std::string VERBOSE_MSG;
 
     void draw();
 
@@ -61,6 +65,7 @@ private:
     SDL_Texture * _texture;
     SDL_Rect _body;
     bool _is_hide;
+    double _rotation_angle;
 
 protected:
     VisualComponent();
