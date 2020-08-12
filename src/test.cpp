@@ -8,9 +8,9 @@
 void Test::runTest()
 {
     try {
-        // graphicsTest();
-        // timerTest();
-        // assetsManagerTest();
+        graphicsTest();
+        timerTest();
+        assetsManagerTest();
         visualComponentTest();
         std::cout << "\t\033[0;32mTests passed!\033[0m" << std::endl;
     }
