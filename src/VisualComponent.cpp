@@ -1,4 +1,5 @@
 #include "VisualComponent.hpp"
+#include "Graphics.hpp"
 
 VisualComponent::VisualComponent():
 _parent(nullptr),
@@ -32,6 +33,20 @@ void VisualComponent::addChild(VisualComponent * child)
             return;
     }
     _children.push_back(child);
+}
+
+void VisualComponent::removeChild(VisualComponent * child)
+{
+    auto iter = _children.begin();
+    for ( ; iter != _children.end(); iter++)
+        if (*iter == child) break;
+
+    _children.erase(iter);
+}
+
+int32_t VisualComponent::countChildren() const
+{
+    return (int32_t) _children.size();
 }
 
 std::vector<VisualComponent *> VisualComponent::getChildren() const
@@ -141,4 +156,14 @@ int32_t VisualComponent::getHeight() const
 void VisualComponent::setHeight(int32_t height)
 {
     _body.h = height;
+}
+
+void VisualComponent::drawOnScreen()
+{
+    Graphics * graphics = Graphics::getInstance();
+    if (_texture != nullptr && !_is_hide)
+        graphics->drawTexture(_texture, getGlobalBody());
+    
+    for (auto child : _children)
+        child->drawOnScreen();
 }

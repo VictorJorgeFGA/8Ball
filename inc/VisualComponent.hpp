@@ -14,7 +14,9 @@ public:
     VisualComponent * getParent();
 
     void addChild(VisualComponent * child);
+    void removeChild(VisualComponent * child);
     std::vector<VisualComponent *> getChildren() const;
+    int32_t countChildren() const;
 
     void hide();
     void show();
@@ -41,6 +43,8 @@ public:
 
     int32_t getHeight() const;
     void setHeight(int32_t height);
+
+    void drawOnScreen();
 
 private:
 
