@@ -6,6 +6,7 @@
 VisualComponent * VisualComponent::SCREEN = nullptr;
 bool VisualComponent::VERBOSE = false;
 const std::string VisualComponent::VERBOSE_MSG = "\033[0;33m(VERBOSE) VisualComponent:\t\033[0m";
+Graphics * VisualComponent::graphics = nullptr;
 
 void VisualComponent::setVerboseMode()
 {
@@ -15,10 +16,10 @@ void VisualComponent::setVerboseMode()
 void VisualComponent::startUp()
 {
     if (SCREEN == nullptr) {
-        Graphics * g = Graphics::getInstance();
+        graphics = Graphics::getInstance();
         SCREEN = new VisualComponent();
-        SCREEN->setWidth(g->getWindowWidth());
-        SCREEN->setHeight(g->getWindowHeight());
+        SCREEN->setWidth(graphics->getWindowWidth());
+        SCREEN->setHeight(graphics->getWindowHeight());
 
         if (VERBOSE) std::cout << VERBOSE_MSG + "Starting up" << std::endl;
     }
@@ -33,6 +34,7 @@ void VisualComponent::shutDown()
     
     delete SCREEN;
     SCREEN = nullptr;
+    graphics = nullptr;
 
     if (VERBOSE) std::cout << VERBOSE_MSG + "Shutting down\n" << std::endl; 
 }
@@ -42,7 +44,9 @@ void VisualComponent::drawComponents()
     if (SCREEN == nullptr)
         throw std::runtime_error("Attempt to draw VisualComponent objects before VisualComponent initialization");
     
+    graphics->clearScreen();
     SCREEN->draw();
+    graphics->updateScreen();
 }
 
 VisualComponent * VisualComponent::getScreenObject()
@@ -203,7 +207,6 @@ void VisualComponent::setRotationAngle(double rotation_angle)
 
 void VisualComponent::draw()
 {
-    Graphics * graphics = Graphics::getInstance();
     if (_texture != nullptr && !_is_hide)
         graphics->drawTexture(_texture, getGlobalBody(), getRotationAngle());
     
@@ -228,12 +231,11 @@ VisualComponent::~VisualComponent()
         
         if (VERBOSE) {
             std::cout << VERBOSE_MSG + "Deleting this component:" << std::endl;
-            
-            Graphics * g = Graphics::getInstance();
-            g->clearScreen();
+
+            graphics->clearScreen();
             if (child->getTexture() != nullptr)
-                g->drawTexture(child->getTexture(), child->getGlobalBody());
-            g->updateScreen();
+                graphics->drawTexture(child->getTexture(), child->getGlobalBody());
+            graphics->updateScreen();
             SDL_Delay(900);
         }
         

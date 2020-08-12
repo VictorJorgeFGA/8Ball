@@ -206,18 +206,14 @@ void Test::visualComponentTest()
     ball9->setRelativeX(background->getWidth() - ball9->getWidth() - 10);
     ball9->setRelativeY(background->getHeight() - ball9->getHeight() - 10);
 
-    graphics->clearScreen();
     VisualComponent::drawComponents();
-    graphics->updateScreen();
     SDL_Delay(1200);
 
     ball8->setParent(VisualComponent::getScreenObject());
     ball7->hide();
     text->setRotationAngle(20);
 
-    graphics->clearScreen();
     VisualComponent::drawComponents();
-    graphics->updateScreen();
     SDL_Delay(1200);
 
     VisualComponent::shutDown();

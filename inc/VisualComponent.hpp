@@ -1,6 +1,7 @@
 #ifndef _VISUAL_COMPONENT_HPP_
 #define _VISUAL_COMPONENT_HPP_
 
+#include "Graphics.hpp"
 #include <SDL2/SDL.h>
 #include <vector>
 #include <string>
@@ -54,6 +55,7 @@ private:
     static VisualComponent * SCREEN;
     static bool VERBOSE;
     static const std::string VERBOSE_MSG;
+    static Graphics * graphics;
 
     void draw();
 
