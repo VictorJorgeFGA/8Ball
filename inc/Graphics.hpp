@@ -38,6 +38,8 @@ public:
     SDL_Texture * createTextTexture(TTF_Font * font, const std::string & text, SDL_Color color = {0,0,0,0});
     void drawTexture(SDL_Texture * texture, SDL_Rect * drawing_area);
     void drawTexture(SDL_Texture * texture, SDL_Rect drawing_area);
+    void drawTexture(SDL_Texture * texture, SDL_Rect * drawing_area, double rotation_angle);
+    void drawTexture(SDL_Texture * texture, SDL_Rect drawing_area, double rotation_angle);
     void unloadTexture(SDL_Texture * texture) const;
 
 private:

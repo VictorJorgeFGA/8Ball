@@ -169,6 +169,7 @@ void Test::visualComponentTest()
     Graphics * graphics = Graphics::getInstance();
     VisualComponent::startUp();
     VisualComponent::setVerboseMode();
+    AssetsManager::setVerboseMode();
 
     SolidImage * background = SolidImage::newSolidImage("background_test.png", 210, 210),
                     * ball6 = SolidImage::newSolidImage("ball6_test.png", 60, 60),
@@ -192,6 +193,7 @@ void Test::visualComponentTest()
 
     background->setGlobalX(graphics->getWindowWidth() / 2 - 105);
     background->setGlobalY(graphics->getWindowHeight() / 2 - 105);
+    background->setRotationAngle(45.0f);
 
     ball6->setRelativeX(10); ball6->setRelativeY(10);
 
@@ -211,6 +213,7 @@ void Test::visualComponentTest()
 
     ball8->setParent(VisualComponent::getScreenObject());
     ball7->hide();
+    text->setRotationAngle(20);
 
     graphics->clearScreen();
     VisualComponent::drawComponents();
