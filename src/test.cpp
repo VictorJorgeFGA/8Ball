@@ -168,60 +168,63 @@ void Test::visualComponentTest()
     Graphics::startUp();
     Graphics * graphics = Graphics::getInstance();
     AssetsManager * am = AssetsManager::getInstance();
+    VisualComponent::startUp();
+    VisualComponent::setVerboseMode();
 
-    VisualComponent background, ball6, ball7, ball8, ball9;
+    VisualComponent * background = VisualComponent::newVisualComponent(),
+                    * ball6 = VisualComponent::newVisualComponent(),
+                    * ball7 = VisualComponent::newVisualComponent(),
+                    * ball8 = VisualComponent::newVisualComponent(),
+                    * ball9 = VisualComponent::newVisualComponent();
 
-    background.setTexture(am->getTexture("background_test.png"));
-    background.setWidth(210); background.setHeight(210);
-    background.setGlobalX(graphics->getWindowWidth() / 2 - 105);
-    background.setGlobalY(graphics->getWindowHeight() / 2 - 105);
-    background.addChild(&ball6);
-    background.addChild(&ball7);
-    background.addChild(&ball8);
-    background.addChild(&ball9);
-    //Attempt to duplicate
-    background.addChild(&ball9);
+    background->setTexture(am->getTexture("background_test.png"));
+    background->setWidth(210); background->setHeight(210);
+    background->setGlobalX(graphics->getWindowWidth() / 2 - 105);
+    background->setGlobalY(graphics->getWindowHeight() / 2 - 105);
 
-    if (background.countChildren() != 4)
-        throw std::runtime_error("Visual Component children vector size failed! Expected 4 children, got " + std::to_string(background.countChildren()));
+    ball6->setParent(background);
+    ball7->setParent(background);
+    ball8->setParent(background);
+    ball9->setParent(background);
+    if (background->countChildren() != 4)
+        throw std::runtime_error("Visual Component children vector size failed! Expected 4 children, got " + std::to_string(background->countChildren()));
+    else if (VisualComponent::getScreenObject()->countChildren() != 1)
+        throw std::runtime_error("SCREEN Visual Component children vector size failed! Expected 1, got " + std::to_string(VisualComponent::getScreenObject()->countChildren()));
 
-    ball6.setTexture(am->getTexture("ball6_test.png"));
-    ball6.setWidth(60); ball6.setHeight(60);
-    ball6.setRelativeX(10); ball6.setRelativeY(10);
+    ball6->setTexture(am->getTexture("ball6_test.png"));
+    ball6->setWidth(60); ball6->setHeight(60);
+    ball6->setRelativeX(10); ball6->setRelativeY(10);
 
-    ball7.setTexture(am->getTexture("ball7_test.png"));
-    ball7.setWidth(60); ball7.setHeight(60);
-    ball7.setRelativeX(background.getWidth() - ball7.getWidth() - 10);
-    ball7.setRelativeY(10);
+    ball7->setTexture(am->getTexture("ball7_test.png"));
+    ball7->setWidth(60); ball7->setHeight(60);
+    ball7->setRelativeX(background->getWidth() - ball7->getWidth() - 10);
+    ball7->setRelativeY(10);
 
-    ball8.setTexture(am->getTexture("ball8_test.png"));
-    ball8.setWidth(60); ball8.setHeight(60);
-    ball8.setRelativeX(10);
-    ball8.setRelativeY(background.getHeight() - ball8.getHeight() - 10);
+    ball8->setTexture(am->getTexture("ball8_test.png"));
+    ball8->setWidth(60); ball8->setHeight(60);
+    ball8->setRelativeX(10);
+    ball8->setRelativeY(background->getHeight() - ball8->getHeight() - 10);
 
-    ball9.setTexture(am->getTexture("ball9_test.png"));
-    ball9.setWidth(60); ball9.setHeight(60);
-    ball9.setRelativeX(background.getWidth() - ball9.getWidth() - 10);
-    ball9.setRelativeY(background.getHeight() - ball9.getHeight() - 10);
+    ball9->setTexture(am->getTexture("ball9_test.png"));
+    ball9->setWidth(60); ball9->setHeight(60);
+    ball9->setRelativeX(background->getWidth() - ball9->getWidth() - 10);
+    ball9->setRelativeY(background->getHeight() - ball9->getHeight() - 10);
 
-    ball6.setParent(&background);
-    ball7.setParent(&background);
-    ball8.setParent(&background);
-    ball9.setParent(&background);
 
     graphics->clearScreen();
-    background.drawOnScreen();
+    VisualComponent::drawComponents();
     graphics->updateScreen();
     SDL_Delay(2000);
 
-    ball7.hide();
-    background.removeChild(&ball8);
+    ball8->setParent(VisualComponent::getScreenObject());
+    ball7->hide();
 
     graphics->clearScreen();
-    background.drawOnScreen();
+    VisualComponent::drawComponents();
     graphics->updateScreen();
     SDL_Delay(2000);
 
+    VisualComponent::shutDown();
     AssetsManager::shutDown();
     Graphics::shutDown();
 

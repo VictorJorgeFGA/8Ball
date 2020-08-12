@@ -3,18 +3,23 @@
 
 #include <SDL2/SDL.h>
 #include <vector>
+#include <string>
 
 class VisualComponent
 {
 public:
-    VisualComponent();
-    ~VisualComponent();
+    static void setVerboseMode();
 
-    void setParent(VisualComponent * parent);
+    static void startUp();
+    static void shutDown();
+    static void drawComponents();
+    static VisualComponent * getScreenObject();
+
+    static VisualComponent * newVisualComponent(SDL_Texture * texture = nullptr, int32_t relative_x = 0, int32_t relative_y = 0, int32_t width = 0, int32_t height = 0, VisualComponent * parent = SCREEN);
+
+    void setParent(VisualComponent * new_parent);
     VisualComponent * getParent();
 
-    void addChild(VisualComponent * child);
-    void removeChild(VisualComponent * child);
     std::vector<VisualComponent *> getChildren() const;
     int32_t countChildren() const;
 
@@ -44,9 +49,17 @@ public:
     int32_t getHeight() const;
     void setHeight(int32_t height);
 
-    void drawOnScreen();
-
 private:
+    static VisualComponent * SCREEN;
+    static bool VERBOSE;
+
+    void draw();
+
+    VisualComponent();
+    ~VisualComponent();
+
+    void addChild(VisualComponent * child);
+    void removeChild(VisualComponent * child);
 
     VisualComponent * _parent;
     std::vector<VisualComponent *> _children;
