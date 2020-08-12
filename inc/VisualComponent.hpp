@@ -15,8 +15,6 @@ public:
     static void drawComponents();
     static VisualComponent * getScreenObject();
 
-    static VisualComponent * newVisualComponent(SDL_Texture * texture = nullptr, int32_t relative_x = 0, int32_t relative_y = 0, int32_t width = 0, int32_t height = 0, VisualComponent * parent = SCREEN);
-
     void setParent(VisualComponent * new_parent);
     VisualComponent * getParent();
 
@@ -55,9 +53,6 @@ private:
 
     void draw();
 
-    VisualComponent();
-    ~VisualComponent();
-
     void addChild(VisualComponent * child);
     void removeChild(VisualComponent * child);
 
@@ -66,6 +61,10 @@ private:
     SDL_Texture * _texture;
     SDL_Rect _body;
     bool _is_hide;
+
+protected:
+    VisualComponent();
+    ~VisualComponent();
 };
 
 #endif

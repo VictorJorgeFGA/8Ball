@@ -15,15 +15,24 @@ void VisualComponent::startUp()
 {
     if (SCREEN == nullptr) {
         Graphics * g = Graphics::getInstance();
-        SCREEN = newVisualComponent(nullptr, 0, 0, g->getWindowWidth(), g->getWindowHeight());
-        SCREEN->_parent = nullptr;
+        SCREEN = new VisualComponent();
+        SCREEN->setWidth(g->getWindowWidth());
+        SCREEN->setHeight(g->getWindowHeight());
     }
+    else
+        throw std::runtime_error("Attempt to startUp VisualComponent twice");
 }
 
 void VisualComponent::shutDown()
 {
+    if (SCREEN == nullptr)
+        throw std::runtime_error("Attempt to shutDown VisualComponent before initialization");
+    
     delete SCREEN;
     SCREEN = nullptr;
+
+    if (VERBOSE)
+        std::cout << "\n\tVisualComponent ShutDown\n" << std::endl; 
 }
 
 void VisualComponent::drawComponents()
@@ -40,21 +49,6 @@ VisualComponent * VisualComponent::getScreenObject()
         throw std::runtime_error("Attempt to get VisualComponent::SCREEN object before VisualComponent initialization");
     
     return SCREEN;
-}
-
-VisualComponent * VisualComponent::newVisualComponent(SDL_Texture * texture, int32_t relative_x, int32_t relative_y, int32_t width, int32_t height, VisualComponent * parent)
-{
-    VisualComponent * visual_component = new VisualComponent();
-    visual_component->setTexture(texture);
-    visual_component->setRelativeX(relative_x);
-    visual_component->setRelativeY(relative_y);
-    visual_component->setWidth(width);
-    visual_component->setHeight(height);
-    visual_component->setParent(parent);
-
-    if (VERBOSE) std::cout << "\tCreating a new VisualComponent" << std::endl;
-
-    return visual_component;
 }
 
 void VisualComponent::setParent(VisualComponent * new_parent)

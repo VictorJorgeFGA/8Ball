@@ -167,54 +167,47 @@ void Test::visualComponentTest()
 
     Graphics::startUp();
     Graphics * graphics = Graphics::getInstance();
-    AssetsManager * am = AssetsManager::getInstance();
     VisualComponent::startUp();
     VisualComponent::setVerboseMode();
 
-    VisualComponent * background = VisualComponent::newVisualComponent(),
-                    * ball6 = VisualComponent::newVisualComponent(),
-                    * ball7 = VisualComponent::newVisualComponent(),
-                    * ball8 = VisualComponent::newVisualComponent(),
-                    * ball9 = VisualComponent::newVisualComponent();
+    SolidImage * background = SolidImage::newSolidImage("background_test.png", 210, 210),
+                    * ball6 = SolidImage::newSolidImage("ball6_test.png", 60, 60),
+                    * ball7 = SolidImage::newSolidImage("ball7_test.png", 60, 60),
+                    * ball8 = SolidImage::newSolidImage("ball8_test.png", 60, 60),
+                    * ball9 = SolidImage::newSolidImage("ball9_test.png", 60, 60);
 
-    background->setTexture(am->getTexture("background_test.png"));
-    background->setWidth(210); background->setHeight(210);
-    background->setGlobalX(graphics->getWindowWidth() / 2 - 105);
-    background->setGlobalY(graphics->getWindowHeight() / 2 - 105);
+    SolidText * text = SolidText::newSolidText("Solid Text testing!", "sony_sketch.ttf", 32, {0, 0, 0, 0xff});
 
     ball6->setParent(background);
     ball7->setParent(background);
     ball8->setParent(background);
     ball9->setParent(background);
+
     if (background->countChildren() != 4)
         throw std::runtime_error("Visual Component children vector size failed! Expected 4 children, got " + std::to_string(background->countChildren()));
-    else if (VisualComponent::getScreenObject()->countChildren() != 1)
+    else if (VisualComponent::getScreenObject()->countChildren() != 2)
         throw std::runtime_error("SCREEN Visual Component children vector size failed! Expected 1, got " + std::to_string(VisualComponent::getScreenObject()->countChildren()));
 
-    ball6->setTexture(am->getTexture("ball6_test.png"));
-    ball6->setWidth(60); ball6->setHeight(60);
+    text->setRelativeX(10); text->setRelativeY(10);
+
+    background->setGlobalX(graphics->getWindowWidth() / 2 - 105);
+    background->setGlobalY(graphics->getWindowHeight() / 2 - 105);
+
     ball6->setRelativeX(10); ball6->setRelativeY(10);
 
-    ball7->setTexture(am->getTexture("ball7_test.png"));
-    ball7->setWidth(60); ball7->setHeight(60);
     ball7->setRelativeX(background->getWidth() - ball7->getWidth() - 10);
     ball7->setRelativeY(10);
 
-    ball8->setTexture(am->getTexture("ball8_test.png"));
-    ball8->setWidth(60); ball8->setHeight(60);
     ball8->setRelativeX(10);
     ball8->setRelativeY(background->getHeight() - ball8->getHeight() - 10);
 
-    ball9->setTexture(am->getTexture("ball9_test.png"));
-    ball9->setWidth(60); ball9->setHeight(60);
     ball9->setRelativeX(background->getWidth() - ball9->getWidth() - 10);
     ball9->setRelativeY(background->getHeight() - ball9->getHeight() - 10);
-
 
     graphics->clearScreen();
     VisualComponent::drawComponents();
     graphics->updateScreen();
-    SDL_Delay(2000);
+    SDL_Delay(1200);
 
     ball8->setParent(VisualComponent::getScreenObject());
     ball7->hide();
@@ -222,7 +215,7 @@ void Test::visualComponentTest()
     graphics->clearScreen();
     VisualComponent::drawComponents();
     graphics->updateScreen();
-    SDL_Delay(2000);
+    SDL_Delay(1200);
 
     VisualComponent::shutDown();
     AssetsManager::shutDown();
