@@ -1,5 +1,8 @@
 #include "Graphics.hpp"
 #include "SDL.hpp"
+#include "SDL_image.hpp"
+#include "SDL_ttf.hpp"
+
 #include <stdexcept>
 #include <iostream>
 #include <string> 

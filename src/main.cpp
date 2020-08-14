@@ -18,12 +18,12 @@ int main(int argc, char * argv[])
         SolidImage::newSolidImage("background_test.png", 150, 100),
         SolidText::newSolidText("BUTTON TEST", "sony_sketch.ttf", 18, {0xff, 0xff, 0xff, 0xff})
     );
-    button->setClickReaction([] {
-        std::cout << "Button pressed" << std::endl;
-        SDL_Event e;
-        e.type = SDL_QUIT;
-        SDL_PushEvent(&e);
-    });
+    // button->setClickReaction([] {
+    //     std::cout << "Button pressed" << std::endl;
+    //     SDL_Event e;
+    //     e.type = SDL_QUIT;
+    //     SDL_PushEvent(&e);
+    // });
 
     button->untie();
     button->setRelativeX(20);

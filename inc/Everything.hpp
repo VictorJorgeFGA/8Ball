@@ -1,4 +1,6 @@
 #include "SDL.hpp"
+#include "SDL_image.hpp"
+#include "SDL_ttf.hpp"
 #include "Graphics.hpp"
 #include "Timer.hpp"
 #include "AssetsManager.hpp"

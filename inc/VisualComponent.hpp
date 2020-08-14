@@ -2,7 +2,8 @@
 #define _VISUAL_COMPONENT_HPP_
 
 #include "Graphics.hpp"
-#include <SDL2/SDL.h>
+#include "SDL.hpp"
+
 #include <vector>
 #include <string>
 

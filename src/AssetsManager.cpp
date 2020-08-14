@@ -1,6 +1,8 @@
 #include "AssetsManager.hpp"
 #include "Graphics.hpp"
 #include "SDL.hpp"
+#include "SDL_ttf.hpp"
+
 #include <string>
 #include <iostream>
 

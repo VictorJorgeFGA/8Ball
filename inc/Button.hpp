@@ -4,6 +4,7 @@
 #include "InteractiveComponent.hpp"
 #include "SolidImage.hpp"
 #include "SolidText.hpp"
+#include "SDL.hpp"
 #include <functional>
 
 class Button : public InteractiveComponent
@@ -25,6 +26,6 @@ protected:
     virtual void reactToReleasing(const SDL_Point & cursor_coordinates);
     virtual void reactToDragging(const SDL_Point & cursor_coordinates);
     virtual void reactToClick(const SDL_Point & cursor_coordinates);
-};
+}; 
 
 #endif

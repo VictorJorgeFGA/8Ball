@@ -3,6 +3,7 @@
 
 #include "SDL.hpp"
 #include "VisualComponent.hpp"
+
 #include <vector>
 #include <functional>
 #include <string>

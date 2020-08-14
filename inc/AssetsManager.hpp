@@ -2,6 +2,8 @@
 #define _ASSETSMANAGER_HPP_
 
 #include "SDL.hpp"
+#include "SDL_ttf.hpp"
+
 #include <string>
 #include <map>
 
