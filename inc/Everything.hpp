@@ -5,3 +5,5 @@
 #include "VisualComponent.hpp"
 #include "SolidText.hpp"
 #include "SolidImage.hpp"
+#include "InteractiveComponent.hpp"
+#include "Button.hpp"

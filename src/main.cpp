@@ -1,7 +1,9 @@
 #include "test.hpp"
-#include "Everything.hpp"
+#include "GeneralSystem.hpp"
+#include <iostream>
+#include <ios>
 
-#define TEST
+//#define TEST
 
 int main(int argc, char * argv[])
 {
@@ -9,50 +11,51 @@ int main(int argc, char * argv[])
     Test::runTest();
     
 #else
-    Graphics::startUp("8 Ball", 720, 480, "assets/default_icon.png");
-    Graphics * gr = Graphics::getInstance();
+    GeneralSystem::INIT_SUBSYSTEMS(true);
+    std::cout.tie(0);
+
+    Button * button = Button::newButton(
+        SolidImage::newSolidImage("background_test.png", 150, 100),
+        SolidText::newSolidText("BUTTON TEST", "sony_sketch.ttf", 18, {0xff, 0xff, 0xff, 0xff})
+    );
+    button->setClickReaction([] {
+        std::cout << "Button pressed" << std::endl;
+        SDL_Event e;
+        e.type = SDL_QUIT;
+        SDL_PushEvent(&e);
+    });
+
+    button->untie();
+    button->setRelativeX(20);
+    button->setRelativeY(20);
 
     SDL_Event event;
     bool run = true;
-    SDL_Rect rect {50, 50, 100, 100};
     while (run) {
         while (SDL_PollEvent(&event) != 0) {
-            if (event.type == SDL_KEYDOWN) {
-                switch (event.key.keysym.sym)
-                {
-                case SDLK_h:
-                    gr->hideCursor();
-                    break;
-                case SDLK_s:
-                    gr->showCursor();
-                    break;
-                case SDLK_1:
-                    gr->maximizeWindow();
-                    break;
-                case SDLK_2:
-                    gr->minimizeWindow();
-                    break;
-                case SDLK_3:
-                    gr->setFullScreenMode();
-                    break;
-                case SDLK_4:
-                    gr->setWindowedMode();
-                    break;
-                }
-            } else if (event.type == SDL_QUIT) {
+            if (event.type == SDL_QUIT)
                 run = false;
+            else if (event.type == SDL_MOUSEBUTTONDOWN) {
+                int32_t x, y;
+                SDL_GetMouseState(&x, &y);
+                InteractiveComponent::processMouseButtonDown({x,y});
+            }
+            else if (event.type == SDL_MOUSEMOTION) {
+                int32_t x, y;
+                SDL_GetMouseState(&x, &y);
+                InteractiveComponent::processMouseMotion({x,y});
+            }
+            else if (event.type == SDL_MOUSEBUTTONUP) {
+                int32_t x, y;
+                SDL_GetMouseState(&x, &y);
+                InteractiveComponent::processMouseButtonUp({x,y});
             }
         }
-        gr->clearScreen();
-        gr->setDrawColor(0x0, 0x0, 0x0);
-        gr->drawRectangle(&rect);
-        gr->updateScreen();
-
-        SDL_Delay(36);
+        VisualComponent::drawComponents();
+        SDL_Delay(16);
     }
 
-    Graphics::shutDown();
-
+    GeneralSystem::QUIT_SUBSYSTEMS();
 #endif
     return 0;
 }

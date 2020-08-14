@@ -30,6 +30,7 @@ public:
     SDL_Texture * getTexture();
 
     SDL_Rect getGlobalBody() const;
+    const SDL_Rect * getGlobalBodyReference() const;
     SDL_Rect getRelativeBody() const;
 
     int32_t getGlobalX() const;
@@ -50,6 +51,10 @@ public:
 
     double getRotationAngle() const;
     void setRotationAngle(double rotation_angle);
+    void rotateClockwise(double amount);
+
+    void addChild(VisualComponent * child);
+    void removeChild(VisualComponent * child);
 
 private:
     static VisualComponent * SCREEN;
@@ -58,9 +63,7 @@ private:
     static Graphics * graphics;
 
     void draw();
-
-    void addChild(VisualComponent * child);
-    void removeChild(VisualComponent * child);
+    
 
     VisualComponent * _parent;
     std::vector<VisualComponent *> _children;
@@ -70,8 +73,9 @@ private:
     double _rotation_angle;
 
 protected:
+
     VisualComponent();
-    ~VisualComponent();
+    virtual ~VisualComponent();
 };
 
 #endif
