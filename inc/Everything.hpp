@@ -9,3 +9,4 @@
 #include "SolidImage.hpp"
 #include "InteractiveComponent.hpp"
 #include "Button.hpp"
+#include "RunningManager.hpp"
