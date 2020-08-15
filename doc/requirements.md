@@ -8,7 +8,7 @@ This file contains all game desired functionalities in order.
 		- [x] Textures
 		- [x] Text
 	- [x] Timer
-	- [ ] Running Manager
+	- [x] Running Manager
 	- [x] Visual Component (Wrap all low level graphics stuff)
 	- [ ] Game Objects
 		- [ ] Ball
