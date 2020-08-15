@@ -3,13 +3,13 @@
 This file contains all game desired functionalities in order.
 
 - [ ] Basic systems
-	- [ ] Graphics
-		- [ ] Shapes
-		- [ ] Textures
-		- [ ] Text
-	- [ ] Timer
+	- [x] Graphics
+		- [x] Shapes
+		- [x] Textures
+		- [x] Text
+	- [x] Timer
 	- [ ] Running Manager
-	- [ ] Visual Component (Wrap all low level graphics stuff)
+	- [x] Visual Component (Wrap all low level graphics stuff)
 	- [ ] Game Objects
 		- [ ] Ball
 		- [ ] Table
