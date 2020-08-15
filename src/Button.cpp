@@ -75,11 +75,6 @@ void Button::reactToReleasing(const SDL_Point & cursor_coordinates)
     _shade->hide();
 }
 
-void Button::reactToDragging(const SDL_Point & cursor_coordinates)
-{
-
-}
-
 void Button::reactToClick(const SDL_Point & cursor_coordinates)
 {
     _call_back_function();

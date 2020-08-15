@@ -12,6 +12,7 @@ void Test::runTest()
         timerTest();
         assetsManagerTest();
         visualComponentTest();
+        interactiveComponentTest();
         std::cout << "\t\033[0;32mTests passed!\033[0m" << std::endl;
     }
     catch (std::runtime_error & e) {
@@ -215,6 +216,68 @@ void Test::visualComponentTest()
 
     VisualComponent::drawComponents();
     SDL_Delay(1200);
+
+    VisualComponent::shutDown();
+    AssetsManager::shutDown();
+    Graphics::shutDown();
+
+    std::cout << '\t' << "Ok" << std::endl;
+}
+
+void Test::interactiveComponentTest()
+{
+    std::cout << "Visual Component tests:" << std::endl;
+
+    Graphics::startUp();
+    VisualComponent::startUp();
+    AssetsManager::setVerboseMode();
+    VisualComponent::setVerboseMode();
+
+    Button * button = Button::newButton("Button test");
+    button->untie();
+
+    VisualComponent::drawComponents();
+    SDL_Delay(1000);
+
+    std::cout << "\tUntied dragging simulation" << std::endl;
+
+    int32_t new_global_x = button->getGlobalX()+button->getWidth() - 1;
+    int32_t new_global_y = button->getGlobalY()+button->getHeight() - 1;
+    InteractiveComponent::processMouseButtonDown({button->getGlobalX()+1,button->getGlobalY()+1});
+    InteractiveComponent::processMouseMotion({button->getGlobalX()+button->getWidth(), button->getGlobalY()+button->getHeight()});
+    VisualComponent::drawComponents();
+    SDL_Delay(500);
+
+    InteractiveComponent::processMouseButtonUp({10,10});
+    VisualComponent::drawComponents();
+    SDL_Delay(1000);
+
+    if (button->getGlobalX() != new_global_x || button->getGlobalY() != new_global_y)
+        throw std::runtime_error(
+            "Untied dragging test failed. Expected coordinates: " +
+            std::to_string(new_global_x) + ", " +
+            std::to_string(new_global_y) + ". Got:" +
+            std::to_string(button->getGlobalX()) + ", " +
+            std::to_string(button->getGlobalY())
+        );
+
+    button->tie();
+    InteractiveComponent::processMouseButtonDown({button->getGlobalX(), button->getGlobalY()});
+    InteractiveComponent::processMouseMotion({button->getGlobalX()+button->getWidth(), button->getGlobalY()+button->getHeight()});
+    VisualComponent::drawComponents();
+    SDL_Delay(500);
+
+    InteractiveComponent::processMouseButtonUp({10,10});
+    SDL_Delay(1000);
+
+    if (button->getGlobalX() != new_global_x || button->getGlobalY() != new_global_y)
+        throw std::runtime_error(
+            "Tied dragging test failed. Expected coordinates: " +
+            std::to_string(new_global_x) + ", " +
+            std::to_string(new_global_y) + ". Got:" +
+            std::to_string(button->getGlobalX()) + ", " +
+            std::to_string(button->getGlobalY())
+        );
 
     VisualComponent::shutDown();
     AssetsManager::shutDown();
