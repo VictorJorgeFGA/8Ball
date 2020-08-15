@@ -2,6 +2,9 @@
 #define _GRAPHICS_HPP_
 
 #include "SDL.hpp"
+#include "SDL_image.hpp"
+#include "SDL_ttf.hpp"
+
 #include <stdint.h>
 #include <string>
 

@@ -11,6 +11,7 @@ private:
     static void timerTest();
     static void assetsManagerTest();
     static void visualComponentTest();
+    static void interactiveComponentTest();
 };
 
 #endif

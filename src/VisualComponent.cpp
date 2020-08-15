@@ -124,6 +124,11 @@ SDL_Rect VisualComponent::getGlobalBody() const
     return {getGlobalX(), getGlobalY(), getWidth(), getHeight()};
 }
 
+const SDL_Rect * VisualComponent::getGlobalBodyReference() const
+{
+    return &_body;
+}
+
 SDL_Rect VisualComponent::getRelativeBody() const
 {
     return _body;
@@ -205,6 +210,31 @@ void VisualComponent::setRotationAngle(double rotation_angle)
     _rotation_angle = rotation_angle;
 }
 
+void VisualComponent::rotateClockwise(double amount)
+{
+    setRotationAngle(getRotationAngle() + amount);
+    for (auto child : _children)
+        child->rotateClockwise(amount);
+}
+
+void VisualComponent::addChild(VisualComponent * child)
+{
+    for (auto e : _children) {
+        if (e == child)
+            return;
+    }
+    _children.push_back(child);
+}
+
+void VisualComponent::removeChild(VisualComponent * child)
+{
+    auto iter = _children.begin();
+    for ( ; iter != _children.end(); iter++)
+        if (*iter == child) break;
+
+    _children.erase(iter);
+}
+
 void VisualComponent::draw()
 {
     if (_texture != nullptr && !_is_hide)
@@ -238,25 +268,7 @@ VisualComponent::~VisualComponent()
             graphics->updateScreen();
             SDL_Delay(900);
         }
-        
+
         delete child;
     }
-}
-
-void VisualComponent::addChild(VisualComponent * child)
-{
-    for (auto e : _children) {
-        if (e == child)
-            return;
-    }
-    _children.push_back(child);
-}
-
-void VisualComponent::removeChild(VisualComponent * child)
-{
-    auto iter = _children.begin();
-    for ( ; iter != _children.end(); iter++)
-        if (*iter == child) break;
-
-    _children.erase(iter);
 }

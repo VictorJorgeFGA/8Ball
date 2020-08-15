@@ -1,6 +1,7 @@
 #include "SolidText.hpp"
 #include "AssetsManager.hpp"
 #include "SDL.hpp"
+#include "SDL_ttf.hpp"
 
 SolidText * SolidText::newSolidText(const std::string & text, const std::string & font_name, uint8_t font_size, SDL_Color color)
 {
