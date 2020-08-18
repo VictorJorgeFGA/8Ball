@@ -11,7 +11,7 @@ public:
     static double_t getScale();
     
     // Scale of the real world to pixels world
-    static void setScale(double_t meters_per_pixel);
+    static void setScale(double_t centimeters_per_pixel);
 
     void setVelocity(const Vector2D & new_velocity);
     Vector2D getVelocity() const;

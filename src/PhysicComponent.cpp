@@ -7,9 +7,9 @@ double_t PhysicComponent::getScale()
     return _measurement_scale;
 }
 
-void PhysicComponent::setScale(double_t meters_per_pixel)
+void PhysicComponent::setScale(double_t centimeters_per_pixel)
 {
-    _measurement_scale = meters_per_pixel;
+    _measurement_scale = centimeters_per_pixel;
 }
 
 void PhysicComponent::setVelocity(const Vector2D & new_velocity)
@@ -39,7 +39,7 @@ bool PhysicComponent::isGhost() const
 
 bool PhysicComponent::isStopped() const
 {
-    return (abs(_velocity.x) < DBL_EPSILON && abs(_velocity.y) < DBL_EPSILON);
+    return (abs(_velocity.x()) < DBL_EPSILON && abs(_velocity.y()) < DBL_EPSILON);
 }
 
 PhysicComponent::PhysicComponent():

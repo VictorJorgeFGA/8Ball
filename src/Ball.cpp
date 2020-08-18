@@ -1,7 +1,8 @@
 #include "AssetsManager.hpp"
 #include "Ball.hpp"
+#include "PhysicWorld.hpp"
 
-Ball * Ball::newBall(double_t radius, const Vector & center, uint8_t ball_number)
+Ball * Ball::newBall(double_t radius, const Vector2D & center, uint8_t ball_number)
 {
     return new Ball(radius, center, ball_number);
 }
@@ -14,7 +15,7 @@ void Ball::translate(const Vector2D & translation)
 
 void Ball::updatePosition(double_t delta_time)
 {
-    _center += (getVelocity()*delta_time);
+    _center += (getVelocity() * delta_time);
     updateTextureCoordinates();
 }
 
@@ -37,7 +38,7 @@ void Ball::setRadius(double_t new_radius)
 
 double_t Ball::getRadius() const
 {
-    return _radius
+    return _radius;
 }
 
 uint8_t Ball::getBallNumber() const
@@ -47,8 +48,8 @@ uint8_t Ball::getBallNumber() const
 
 void Ball::updateTextureCoordinates()
 {
-    setRelativeX((_center.x - _radius) * PhysicComponent::getScale());
-    setRelativeY((_center.y - _radius) * PhysicComponent::getScale());
+    setRelativeX((_center.x() - _radius) * PhysicComponent::getScale());
+    setRelativeY((_center.y() - _radius) * PhysicComponent::getScale());
 }
 
 void Ball::updateTextureSize()
@@ -66,6 +67,7 @@ _ball_number(ball_number)
     setTexture(am->getTexture("ball" + std::to_string(ball_number) + "_texture.png"));
     updateTextureCoordinates();
     updateTextureSize();
+    PhysicWorld::getInstance()->addBall(this);
 }
 
 Ball::~Ball()

@@ -3,65 +3,36 @@
 
 #include <cmath>
 
-struct Vector2D
+class Vector2D
 {
-    Vector2D(double x = 0, double y = 0):x(x), y(y) {};
-    Vector2D(const Vector2D & v2d):x(v2d.x), y(v2d.y) {};
-    Vector2D(const Vector2D && v2d):x(v2d.x), y(v2d.y) {};
+public:
+    Vector2D(double x = 0, double y = 0);
+    Vector2D(const Vector2D & v);
+    Vector2D(const Vector2D && v);
+    Vector2D(const Vector2D & origin, const Vector2D & arrow);
+
     ~Vector2D();
 
-    double magnitude() const
-    {
-        return sqrt((x*x)+(y*y));
-    }
+    double_t magnitude();
+    double_t innerProduct(const Vector2D & v);
+    
+    Vector2D & operator=(const Vector2D && v);
+    Vector2D & operator=(const Vector2D & v);
+    Vector2D & operator+=(const Vector2D & v);
+    Vector2D & operator+=(const Vector2D && v);
+    Vector2D operator+(const Vector2D & v) const; 
+    Vector2D operator*(double_t k) const;
+    Vector2D operator-(const Vector2D & v) const;
+    
+    double_t x() const;
+    double_t y() const;
+    void x(double_t x);
+    void y(double_t y);
 
-    double translate(const Vector2D & v2d)
-    {
-        x += v2d.x;
-        y += v2d.y;
-    }
-
-    Vector2D & operator=(const Vector2D && v2d)
-    {
-        x = v2d.x;
-        y = v2d.y;
-
-        return *this;
-    }
-
-    Vector2D & operator=(const Vector2D & v2d)
-    {
-        x = v2d.x;
-        y = v2d.y;
-
-        return *this;
-    }
-
-    Vector2D & operator+=(const Vector2D & v2d)
-    {
-        x += v2d.x;
-        y += v2d.y;
-
-        return *this;
-    }
-
-    Vector2D & operator+=(const Vector2D && v2d)
-    {
-        x += v2d.x;
-        y += v2d.y;
-
-        return *this;
-    }
-
-    Vector2D operator*(double_t k) const
-    {
-        return Vector2D(x*k, y*k);
-    }
-
-    double x, y;
+private:
+    bool _mag_changed {true};
+    double_t _mag {1.0};
+    double_t _x, _y;
 };
-
-const Vector2D VECTOR_I {1,0};
-const Vector2D VECTOR_J {0,1};
 
 #endif
