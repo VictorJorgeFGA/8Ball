@@ -46,7 +46,7 @@ PhysicComponent::PhysicComponent():
 _velocity({0.0, 0.0}),
 _is_ghost(false)
 {
-    setParent(VisualComponent::getScreenObject());
+
 }
 
 PhysicComponent::~PhysicComponent()

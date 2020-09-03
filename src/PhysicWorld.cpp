@@ -1,5 +1,6 @@
 #include "PhysicWorld.hpp"
 #include "Ball.hpp"
+#include "Cushion.hpp"
 
 PhysicWorld * PhysicWorld::_instance = nullptr;
 
@@ -31,11 +32,38 @@ void PhysicWorld::removeBall(Ball * ball)
     _balls.erase(iter);
 }
 
+void PhysicWorld::addCushion(Cushion * cushion)
+{
+    for (auto c : _cushions)
+        if (c == cushion) return;
+    _cushions.push_back(cushion);
+}
+
+void PhysicWorld::removeCushion(Cushion * cushion)
+{
+    auto iter = _cushions.begin();
+    while (true) {
+        if (iter == _cushions.end())
+            return;
+        else if (*iter == cushion)
+            break;
+        else
+            iter++;
+    }
+    _cushions.erase(iter);
+}
+
 void PhysicWorld::resolveCollisions()
 {
     for (int32_t i = 0; i < (int32_t) _balls.size(); i++)
         for (int32_t j = i + 1; j < (int32_t) _balls.size(); j++)
             collideBallToBall(_balls[i], _balls[j]);
+    
+    /*
+    for (auto ball : _balls)
+        for (auto cushion : _cushions)
+            collideBallToCushion(ball, cushion);
+    */
 }
 
 void PhysicWorld::updateObjectsPosition(double_t delta_time)
@@ -47,11 +75,9 @@ void PhysicWorld::updateObjectsPosition(double_t delta_time)
 void PhysicWorld::collideBallToBall(Ball * ball1, Ball * ball2)
 {
     Vector2D un(ball1->getCenter(), ball2->getCenter());
-    if (un.magnitude() > ball1->getRadius() + ball2->getRadius())
+    if (un.magnitude() > ball1->getRadius() + ball2->getRadius() || abs(un.magnitude() < DBL_EPSILON))
         return;
 
-    if (un.magnitude() == 0.0)
-        return;
     un = un * (1/un.magnitude());
     Vector2D ut(-un.y(), un.x());
 
@@ -71,6 +97,14 @@ void PhysicWorld::collideBallToBall(Ball * ball1, Ball * ball2)
     Vector2D vel2t(ut * v2t_);
     ball1->setVelocity(vel1n + vel1t);
     ball2->setVelocity(vel2n + vel2t);
+}
+
+void PhysicWorld::collideBallToCushion(Ball * ball, Cushion * cushion)
+{
+    if (abs(ball->getCenter().x() - cushion->getCenter().x()) < ball->getRadius() + (cushion->getWidth() / 2.0) &&
+        abs(ball->getCenter().y() - cushion->getCenter().y()) < ball->getRadius() + (cushion->getHeight() / 2.0)) {
+        return;
+    }
 }
 
 PhysicWorld::PhysicWorld()

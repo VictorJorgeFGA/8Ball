@@ -2,6 +2,8 @@
 #include "Ball.hpp"
 #include "PhysicWorld.hpp"
 
+#include <iostream>
+
 Ball * Ball::newBall(double_t radius, const Vector2D & center, uint8_t ball_number)
 {
     return new Ball(radius, center, ball_number);
@@ -48,14 +50,14 @@ uint8_t Ball::getBallNumber() const
 
 void Ball::updateTextureCoordinates()
 {
-    setRelativeX((_center.x() - _radius) * PhysicComponent::getScale());
-    setRelativeY((_center.y() - _radius) * PhysicComponent::getScale());
+    setRelativeX((_center.x() - _radius) / PhysicComponent::getScale());
+    setRelativeY((_center.y() - _radius) / PhysicComponent::getScale());
 }
 
 void Ball::updateTextureSize()
 {
-    setWidth(2.0 * _radius * PhysicComponent::getScale());
-    setHeight(2.0 * _radius * PhysicComponent::getScale());
+    setWidth((2.0 * _radius) / PhysicComponent::getScale());
+    setHeight((2.0 * _radius) / PhysicComponent::getScale());
 }
 
 Ball::Ball(double_t radius, const Vector2D & center, uint8_t ball_number):
@@ -64,13 +66,21 @@ _center(center),
 _ball_number(ball_number)
 {
     AssetsManager * am = AssetsManager::getInstance();
-    setTexture(am->getTexture("ball" + std::to_string(ball_number) + "_texture.png"));
+    VisualComponent::setTexture(am->getTexture("ball" + std::to_string(ball_number) + "_texture.png"));
     updateTextureCoordinates();
     updateTextureSize();
     PhysicWorld::getInstance()->addBall(this);
+    InteractiveComponent::deactivate();
 }
 
 Ball::~Ball()
 {
 
+}
+
+void Ball::reactToDragging(const SDL_Point & cursor_coordinates)
+{
+    // This is necessary beacause Ball position updating is based on physic coordinates.
+    // Interactive Component just update the texture position
+    _center = Vector2D(double_t(getRelativeX()) * PhysicComponent::getScale() + _radius, double_t(getRelativeY()) * PhysicComponent::getScale() + _radius);
 }

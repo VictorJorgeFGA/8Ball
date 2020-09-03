@@ -30,6 +30,9 @@ private:
     uint8_t _ball_number;
     Vector2D _center;
     double_t _radius;
+
+protected:
+    virtual void reactToDragging(const SDL_Point & cursor_coordinates);
 };
 
 #endif

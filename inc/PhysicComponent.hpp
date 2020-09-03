@@ -1,13 +1,15 @@
 #ifndef _PHYSICCOMPONENT_HPP_
 #define _PHYSICCOMPONENT_HPP_
 
+#include "InteractiveComponent.hpp"
 #include "VisualComponent.hpp"
 #include "Vector2D.hpp"
 
-class PhysicComponent : public VisualComponent
+class PhysicComponent : public InteractiveComponent
 {
 public:
     // Scale of the real world to pixels world
+    // centimeters per pixel
     static double_t getScale();
     
     // Scale of the real world to pixels world

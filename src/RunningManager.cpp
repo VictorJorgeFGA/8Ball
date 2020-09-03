@@ -36,17 +36,28 @@ void RunningManager::runProgram()
     while (! _quit) {
         while (SDL_PollEvent(&_event) != 0)
             processEvent();
+
+        if (_physics_timer.getElapsedTime() >= _120FPS_TIME) {
+            _physic_world->resolveCollisions();
+            _physic_world->updateObjectsPosition(_physics_timer.getElapsedTime());
+            _test_ball->setVelocity(_test_ball->getVelocity() - (_test_ball->getVelocity()*0.3*_physics_timer.getElapsedTime()));
+            _ball2->setVelocity(_ball2->getVelocity() - (_ball2->getVelocity() * 0.3 * _physics_timer.getElapsedTime()));
+
+            _physics_timer.reset();
+        }
         
         if (_rendering_timer.getElapsedTime() >= _60FPS_TIME) {
 
+            _physic_world->resolveCollisions();
+            _physic_world->updateObjectsPosition(_rendering_timer.getElapsedTime());
             VisualComponent::drawComponents();
-            
-            std::cout << _rendering_timer.getElapsedTime() << " s" << std::endl;
+
+            //std::cout << "Ball2 vel: " << _ball2->getVelocity().x() << ", " << _ball2->getVelocity().y() << std::endl;
+            //std::cout << _rendering_timer.getElapsedTime() << " s" << std::endl;
             _rendering_timer.reset();
 
-        } else {
-            SDL_Delay((_60FPS_TIME - _rendering_timer.getElapsedTime()) * 1000);
         }
+        SDL_Delay(5);
     }
 }
 
@@ -81,7 +92,7 @@ RunningManager::RunningManager():
 _event(),
 _quit(false),
 _rendering_timer(),
-_LOOP_TIME(0.003),
+_LOOP_TIME(0.0035),
 _120FPS_TIME(1.0/120.0),
 _60FPS_TIME(1.0/60.0),
 _30FPS_TIME(1.0/30.0),
@@ -104,6 +115,16 @@ _background(nullptr)
     _120FPS_TIME -= _LOOP_TIME;
     _60FPS_TIME -= _LOOP_TIME;
     _30FPS_TIME -= _LOOP_TIME;
+
+    _physic_world = PhysicWorld::getInstance();
+    _test_ball = Ball::newBall(30.0, {20.0, 20.0}, 1);
+    _test_ball->setVelocity({150.0,150.0});
+    _ball2 = Ball::newBall(30.0, {270.0, 275.0}, 1);
+    _ball2->setVelocity({5.0, -10.0});
+    _test_ball->activate();
+    _ball2->activate();
+    _test_ball->untie();
+    _ball2->untie();
 }
 
 RunningManager::~RunningManager()
