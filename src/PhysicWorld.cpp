@@ -153,7 +153,7 @@ void PhysicWorld::collideBallToCushion(Ball * ball, Cushion * cushion)
         ball->setVelocity({ball->getVelocity().x(), -ball->getVelocity().y()});
     } else {
         double_t ideal_x = cushion->getCenter().x();
-        ideal_x = ball->getVelocity().x() < 0 ? cushion->getWidth() / 2 + ball->getRadius() : -(cushion->getWidth() / 2 + ball->getRadius());
+        ideal_x += ball->getVelocity().x() < 0 ? cushion->getWidth() / 2 + ball->getRadius() : -(cushion->getWidth() / 2 + ball->getRadius());
 
         double_t delta_x = ideal_x - ball->getCenter().x();
         double_t time = -abs(delta_x / ball->getVelocity().x());

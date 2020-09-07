@@ -3,6 +3,7 @@
 #include "InteractiveComponent.hpp"
 #include "Button.hpp"
 #include "SolidImage.hpp"
+#include "Table.hpp"
 
 #include <stdexcept>
 #include <iostream>
@@ -85,8 +86,7 @@ _LOOP_TIME(0.0035),
 _120FPS_TIME(1.0/120.0),
 _60FPS_TIME(1.0/60.0),
 _30FPS_TIME(1.0/30.0),
-_quit_button(nullptr),
-_background(nullptr)
+_quit_button(nullptr)
 {
     _quit_button = Button::newButton("Sair");
     _quit_button->setClickReaction([](){
@@ -94,11 +94,9 @@ _background(nullptr)
         e.type = SDL_QUIT;
         SDL_PushEvent(&e);
     });
-    Graphics * g = Graphics::getInstance();
-    _background = SolidImage::newSolidImage("background_test.png", g->getWindowWidth(), g->getWindowHeight());
-    _background->setRelativeX(0);
-    _background->setRelativeY(0);
-    _quit_button->setParent(_background);
+
+    _table = Table::newTable(960.0, 544.0);
+    _quit_button->setParent(_table);
     _quit_button->untie();
 
     _120FPS_TIME -= _LOOP_TIME;
@@ -106,14 +104,26 @@ _background(nullptr)
     _30FPS_TIME -= _LOOP_TIME;
 
     _physic_world = PhysicWorld::getInstance();
-    _test_ball = Ball::newBall(30.0, {20.0, 20.0}, 1);
-    _test_ball->setVelocity({150.0,150.0});
-    _ball2 = Ball::newBall(30.0, {270.0, 275.0}, 1);
+    _test_ball = Ball::newBall(15.0, {150.0, 150.0}, 1);
+    _test_ball->setVelocity({700.0,700.0});
+    _ball2 = Ball::newBall(15.0, {200.0, 200.0}, 1);
     _ball2->setVelocity({5.0, -10.0});
     _test_ball->activate();
     _ball2->activate();
     _test_ball->untie();
     _ball2->untie();
+    _test_ball->setParent(_table);
+    _ball2->setParent(_table);
+    _table->deactivate();
+    Ball * bola = Ball::newBall(15.0, {150.0, 300.0}, 1);
+    bola->setVelocity({-100, -90});
+    bola->setParent(_table);
+    bola->untie();
+
+    Ball * bola2 = Ball::newBall(15.0, {175.0, 300.0}, 1);
+    bola2->setVelocity({1,1});
+    bola2->setParent(_table);
+    bola2->untie();
 }
 
 RunningManager::~RunningManager()

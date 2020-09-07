@@ -7,6 +7,7 @@
 #include "SolidImage.hpp"
 #include "PhysicWorld.hpp"
 #include "Ball.hpp"
+#include "Table.hpp"
 
 class RunningManager
 {
@@ -37,7 +38,7 @@ private:
     double _60FPS_TIME;
     double _30FPS_TIME;
     Button * _quit_button;
-    SolidImage * _background;
+    Table * _table;
 };
 
 #endif

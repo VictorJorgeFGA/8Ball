@@ -36,14 +36,14 @@ double_t Cushion::getHeight() const
 
 void Cushion::updateTextureCoordinates()
 {
-    setRelativeX(_top_left.x() / PhysicComponent::getScale());
-    setRelativeY(_top_left.y() / PhysicComponent::getScale());
+    VisualComponent::setRelativeX(_top_left.x() / PhysicComponent::getScale());
+    VisualComponent::setRelativeY(_top_left.y() / PhysicComponent::getScale());
 }
 
 void Cushion::updateTextureSize()
 {
-    setWidth(_width / PhysicComponent::getScale());
-    setHeight(_height / PhysicComponent::getScale());
+    VisualComponent::setWidth(_width / PhysicComponent::getScale());
+    VisualComponent::setHeight(_height / PhysicComponent::getScale());
 }
 
 Cushion::Cushion(double_t width, double_t height, const Vector2D & top_left_point):
