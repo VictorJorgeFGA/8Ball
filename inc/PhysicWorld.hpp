@@ -19,14 +19,19 @@ public:
 
     //Recommended to be called at least 80x per second
     //High object velocities and low calling rate could result in strange physics behavior 
-    void resolveCollisions();
-    void updateObjectsPosition(double_t delta_time);
+    void updateWorldObjects(double_t delta_time);
 
 private:
     static PhysicWorld * _instance;
+    
+    void updateObjectsPosition(double_t delta_time);
+    void resolveCollisions();
 
     void collideBallToBall(Ball * ball1, Ball * ball2);
+    void makePerfectBallToBallContact(Ball * ball1, Ball * ball2);
+
     void collideBallToCushion(Ball * ball, Cushion * cushion);
+    void makePerfectBallToCushionContact(Ball * ball, Cushion * cushion);
 
     std::vector<Ball *> _balls;
     std::vector<Cushion *> _cushions;

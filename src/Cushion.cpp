@@ -52,11 +52,15 @@ _width(width),
 _height(height)
 {
     AssetsManager * am = AssetsManager::getInstance();
-    VisualComponent::setTexture(am->getTexture("cushion_texture.png"));
     updateTextureCoordinates();
     updateTextureSize();
     PhysicWorld::getInstance()->addCushion(this);
     InteractiveComponent::deactivate();
+
+    if (width > height)
+        VisualComponent::setTexture(am->getTexture("horizontal_cushion_texture.png"));
+    else
+        VisualComponent::setTexture(am->getTexture("vertical_cushion_texture.png"));
 }
 
 Cushion::~Cushion()

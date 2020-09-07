@@ -15,6 +15,7 @@ public:
 
     double_t magnitude();
     double_t innerProduct(const Vector2D & v);
+    double_t distance(const Vector2D & v);
     
     Vector2D & operator=(const Vector2D && v);
     Vector2D & operator=(const Vector2D & v);

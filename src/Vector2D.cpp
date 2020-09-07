@@ -47,6 +47,11 @@ double_t Vector2D::innerProduct(const Vector2D & v)
     return _x*v.x() + _y*v.y();
 }
 
+double_t Vector2D::distance(const Vector2D & v)
+{
+    return sqrt( (x()-v.x())*(x()-v.x()) + (y()-v.y())*(y()-v.y()) );
+}
+
 Vector2D & Vector2D::operator=(const Vector2D & v)
 {
     _x = v.x();

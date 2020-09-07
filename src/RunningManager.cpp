@@ -38,24 +38,13 @@ void RunningManager::runProgram()
             processEvent();
 
         if (_physics_timer.getElapsedTime() >= _120FPS_TIME) {
-            _physic_world->resolveCollisions();
-            _physic_world->updateObjectsPosition(_physics_timer.getElapsedTime());
-            _test_ball->setVelocity(_test_ball->getVelocity() - (_test_ball->getVelocity()*0.3*_physics_timer.getElapsedTime()));
-            _ball2->setVelocity(_ball2->getVelocity() - (_ball2->getVelocity() * 0.3 * _physics_timer.getElapsedTime()));
-
+            _physic_world->updateWorldObjects(_physics_timer.getElapsedTime());
             _physics_timer.reset();
         }
         
         if (_rendering_timer.getElapsedTime() >= _60FPS_TIME) {
-
-            _physic_world->resolveCollisions();
-            _physic_world->updateObjectsPosition(_rendering_timer.getElapsedTime());
             VisualComponent::drawComponents();
-
-            //std::cout << "Ball2 vel: " << _ball2->getVelocity().x() << ", " << _ball2->getVelocity().y() << std::endl;
-            //std::cout << _rendering_timer.getElapsedTime() << " s" << std::endl;
             _rendering_timer.reset();
-
         }
         SDL_Delay(5);
     }
