@@ -7,8 +7,9 @@
 class Cushion : public PhysicComponent
 {
 public:
-    static Cushion * newCushion(double_t width, double_t height, const Vector2D & top_left);
+    static Cushion * newCushion(double_t width, double_t height, const Vector2D & top_left = {0.0, 0.0});
 
+    void setPostion(const Vector2D & top_left_point);
     Vector2D getCenter() const;
 
     void setWidth(double_t width);

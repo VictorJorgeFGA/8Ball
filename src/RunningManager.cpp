@@ -95,35 +95,19 @@ _quit_button(nullptr)
         SDL_PushEvent(&e);
     });
 
-    _table = Table::newTable(960.0, 544.0);
+    _table = Table::newTable();
     _quit_button->setParent(_table);
     _quit_button->untie();
+    _physic_world = PhysicWorld::getInstance();
 
     _120FPS_TIME -= _LOOP_TIME;
     _60FPS_TIME -= _LOOP_TIME;
     _30FPS_TIME -= _LOOP_TIME;
 
-    _physic_world = PhysicWorld::getInstance();
-    _test_ball = Ball::newBall(15.0, {150.0, 150.0}, 1);
-    _test_ball->setVelocity({700.0,700.0});
-    _ball2 = Ball::newBall(15.0, {200.0, 200.0}, 1);
-    _ball2->setVelocity({5.0, -10.0});
-    _test_ball->activate();
-    _ball2->activate();
-    _test_ball->untie();
-    _ball2->untie();
-    _test_ball->setParent(_table);
-    _ball2->setParent(_table);
-    _table->deactivate();
-    Ball * bola = Ball::newBall(15.0, {150.0, 300.0}, 1);
-    bola->setVelocity({-100, -90});
-    bola->setParent(_table);
-    bola->untie();
-
-    Ball * bola2 = Ball::newBall(15.0, {175.0, 300.0}, 1);
-    bola2->setVelocity({1,1});
-    bola2->setParent(_table);
-    bola2->untie();
+    Ball::newBall(2.85, _table->getTableCenter() + Vector2D(10.0, 0.0), 1)->setVelocity({50.0, 10.0});
+    Ball::newBall(2.85, _table->getTableCenter() + Vector2D(20.0, 0.0), 1)->setVelocity({51.0, 5.0});
+    Ball::newBall(2.85, _table->getTableCenter() + Vector2D(30.0, 0.0), 1)->setVelocity({55.0, 10.0});
+    Ball::newBall(2.85, _table->getTableCenter() + Vector2D(40.0, 0.0), 1)->setVelocity({-50.0, 0.0});
 }
 
 RunningManager::~RunningManager()

@@ -12,6 +12,7 @@ private:
     static void assetsManagerTest();
     static void visualComponentTest();
     static void interactiveComponentTest();
+    static void physicsTest();
 };
 
 #endif

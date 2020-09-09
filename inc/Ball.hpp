@@ -27,9 +27,9 @@ private:
     Ball(double_t radius = 0.0, const Vector2D & center = {0.0}, uint8_t ball_number = 0);
     virtual ~Ball();
 
-    uint8_t _ball_number;
-    Vector2D _center;
     double_t _radius;
+    Vector2D _center;
+    uint8_t _ball_number;
 
 protected:
     virtual void reactToDragging(const SDL_Point & cursor_coordinates);

@@ -11,14 +11,14 @@ This file contains all game desired functionalities in order.
 	- [x] Running Manager
 	- [x] Visual Component (Wrap all low level graphics stuff)
 	- [ ] Game Objects
-		- [ ] Ball
-		- [ ] Table
+		- [x] Ball
+		- [x] Table
 		- [ ] Player
 		- [ ] Pocket
 	- [ ] Physics
 		- [ ] Movement and friction
-		- [ ] Collision between balls and cushions
-		- [ ] Collision between balls
+		- [x] Collision between balls and cushions
+		- [x] Collision between balls
 		- [ ] Shooting system
 	- [ ] Sound
 		- [ ] Background music

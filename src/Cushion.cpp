@@ -7,6 +7,12 @@ Cushion * Cushion::newCushion(double_t width, double_t height, const Vector2D & 
     return new Cushion(width, height, top_left_point);;
 }
 
+void Cushion::setPostion(const Vector2D & top_left_point)
+{
+    _top_left = top_left_point;
+    updateTextureCoordinates();
+}
+
 Vector2D Cushion::getCenter() const
 {
     return Vector2D(_top_left.x() + (_width / 2.0), _top_left.y() + (_height / 2.0));

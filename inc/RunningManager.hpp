@@ -27,7 +27,6 @@ private:
     ~RunningManager();
 
     PhysicWorld * _physic_world;
-    Ball * _test_ball, * _ball2;
     
     SDL_Event _event;
     bool _quit;

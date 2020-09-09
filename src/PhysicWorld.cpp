@@ -2,6 +2,8 @@
 #include "Ball.hpp"
 #include "Cushion.hpp"
 
+#include <iostream>
+
 PhysicWorld * PhysicWorld::_instance = nullptr;
 
 PhysicWorld * PhysicWorld::getInstance()
