@@ -55,10 +55,21 @@ void PhysicWorld::removeCushion(Cushion * cushion)
     _cushions.erase(iter);
 }
 
+void PhysicWorld::setFrictionCoefficient(double_t value)
+{
+    _friction_coefficient = value;
+}
+
+double_t PhysicWorld::getFrictionCoefficient() const
+{
+    return _friction_coefficient;
+}
+
 void PhysicWorld::updateWorldObjects(double_t delta_time)
 {
     updateObjectsPosition(delta_time);
     resolveCollisions();
+    applyFrictionForce(delta_time);
 }
 
 void PhysicWorld::resolveCollisions()
@@ -70,6 +81,12 @@ void PhysicWorld::resolveCollisions()
     for (auto ball : _balls)
         for (auto cushion : _cushions)
             collideBallToCushion(ball, cushion);
+}
+
+void PhysicWorld::applyFrictionForce(double_t delta_time)
+{
+    for (auto ball : _balls)
+        ball->decreaseVelocity(getFrictionCoefficient() * delta_time);
 }
 
 void PhysicWorld::updateObjectsPosition(double_t delta_time)
@@ -164,7 +181,8 @@ void PhysicWorld::collideBallToCushion(Ball * ball, Cushion * cushion)
     }
 }
 
-PhysicWorld::PhysicWorld()
+PhysicWorld::PhysicWorld():
+_friction_coefficient(7.2)
 {
 
 }

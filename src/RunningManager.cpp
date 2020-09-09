@@ -104,9 +104,9 @@ _quit_button(nullptr)
     _60FPS_TIME -= _LOOP_TIME;
     _30FPS_TIME -= _LOOP_TIME;
 
-    Ball::newBall(2.85, _table->getTableCenter() + Vector2D(10.0, 0.0), 1)->setVelocity({50.0, 10.0});
-    Ball::newBall(2.85, _table->getTableCenter() + Vector2D(20.0, 0.0), 1)->setVelocity({51.0, 5.0});
-    Ball::newBall(2.85, _table->getTableCenter() + Vector2D(30.0, 0.0), 1)->setVelocity({55.0, 10.0});
+    Ball::newBall(2.85, _table->getTableCenter() + Vector2D(10.0, 0.0), 1)->setVelocity({0.0, 55.0});
+    Ball::newBall(2.85, _table->getTableCenter() + Vector2D(20.0, 0.0), 1)->setVelocity({0.0, -55.0});
+    Ball::newBall(2.85, _table->getTableCenter() + Vector2D(30.0, 0.0), 1)->setVelocity({55.0, 0.0});
     Ball::newBall(2.85, _table->getTableCenter() + Vector2D(40.0, 0.0), 1)->setVelocity({-50.0, 0.0});
 }
 

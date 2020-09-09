@@ -18,6 +18,8 @@ public:
     void setVelocity(const Vector2D & new_velocity);
     Vector2D getVelocity() const;
 
+    void decreaseVelocity(double_t amount);
+
     void enableGhost();
     void disableGhost();
     bool isGhost() const;

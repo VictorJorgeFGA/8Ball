@@ -72,6 +72,7 @@ Vector2D & Vector2D::operator+=(const Vector2D & v)
 {
     _x += v.x();
     _y += v.y();
+    _mag_changed = true;
     return *this;
 }
 
@@ -79,6 +80,7 @@ Vector2D & Vector2D::operator+=(const Vector2D && v)
 {
     _x += v.x();
     _y += v.y();
+    _mag_changed = true;
     return *this;
 }
 
@@ -110,9 +112,11 @@ double_t Vector2D::y() const
 void Vector2D::x(double_t x)
 {
     _x = x;
+    _mag_changed = true;
 }
 
 void Vector2D::y(double_t y)
 {
     _y = y;
+    _mag_changed = true;
 }
