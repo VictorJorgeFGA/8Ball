@@ -4,6 +4,7 @@
 #include "Button.hpp"
 #include "SolidImage.hpp"
 #include "Table.hpp"
+#include "SoundManager.hpp"
 
 #include <stdexcept>
 #include <iostream>

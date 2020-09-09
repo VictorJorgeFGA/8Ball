@@ -10,15 +10,18 @@
 class SoundManager
 {
 public:
-    static void startUp(bool verbose = false);
+    static void startUp();
     static void shutDown();
     static SoundManager * getInstance();
+
+    static void setVerboseMode();
 
     void playSoundEffect(const std::string & sound_effect_name);
     void playSong(const std::string & song_name);
 
     void pauseCurrentSong();
     void resumeCurrentSong();
+    bool isPlayingSong() const;
 
 private:
     static bool VERBOSE;
@@ -32,6 +35,8 @@ private:
 
     SoundManager();
     ~SoundManager();
+
+    bool _is_playing_music;
 
     std::map<std::string, Mix_Chunk *> _sound_effects;
     std::map<std::string, Mix_Music *> _songs;

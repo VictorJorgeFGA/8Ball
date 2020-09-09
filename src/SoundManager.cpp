@@ -4,18 +4,18 @@
 #include <stdexcept>
 
 bool SoundManager::VERBOSE = false;
-const std::string SoundManager::ERROR_MSG = "\033[0;31m(ERROR) SoundManager:\t\033[0m";
-const std::string SoundManager::VERBOSE_MSG = "\033[0;33m(VERBOSE) SoundManager:\t[0m";
+const std::string SoundManager::ERROR_MSG = "\033[0;31m(ERROR) SoundManager:\033[0m\t";
+const std::string SoundManager::VERBOSE_MSG = "\033[0;33m(VERBOSE) SoundManager:\033[0m\t";
 
 SoundManager * SoundManager::_instance = nullptr;
 
-void SoundManager::startUp(bool verbose)
+void SoundManager::startUp()
 {
     if (_instance != nullptr) {
         std::cerr << ERROR_MSG << "Attempt to initialize SoundManager more than once." << std::endl;
         throw std::runtime_error("SoundManager startUp bad call.");
     }
-    VERBOSE = verbose;
+    VERBOSE = false;
     _instance = new SoundManager();
 
     if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) {
@@ -42,10 +42,15 @@ void SoundManager::shutDown()
 SoundManager * SoundManager::getInstance()
 {
     if (_instance == nullptr) {
-        std::cerr << ERROR_MSG << "Attempt to get SoundManager instace before initialization." << std::endl;
+        std::cerr << ERROR_MSG << "Attempt to get SoundManager instance before initialization." << std::endl;
         throw std::runtime_error("SoundManager initializing forgotten.");
     }
     return _instance;
+}
+
+void SoundManager::setVerboseMode()
+{
+    VERBOSE = true;
 }
 
 void SoundManager::playSoundEffect(const std::string & sound_effect_name)
@@ -61,12 +66,33 @@ void SoundManager::playSoundEffect(const std::string & sound_effect_name)
 void SoundManager::playSong(const std::string & song_name)
 {
     int32_t MIX_PLAY_FOREVER = -1;
-    if (Mix_PlayMusic(getMusic(song_name), MIX_PLAY_FOREVER) == -1) {
+    if (Mix_FadeInMusic(getMusic(song_name), MIX_PLAY_FOREVER, 2000) == -1) {
         std::cerr << ERROR_MSG << "Unable to play song: " << song_name << std::endl;
         throw std::runtime_error(Mix_GetError());
     }
 
     if (VERBOSE) std::cout << VERBOSE_MSG << "Playing song: " << song_name << std::endl;
+}
+
+void SoundManager::pauseCurrentSong()
+{
+    if (isPlayingSong()) {
+        Mix_PausedMusic();
+        _is_playing_music = false;
+    }
+}
+
+void SoundManager::resumeCurrentSong()
+{
+    if (!isPlayingSong()) {
+        Mix_ResumeMusic();
+        _is_playing_music = true;
+    }
+}
+
+bool SoundManager::isPlayingSong() const
+{
+    return _is_playing_music;
 }
 
 Mix_Chunk * SoundManager::getChunk(const std::string & sound_effect_name)
@@ -93,12 +119,16 @@ Mix_Music * SoundManager::getMusic(const std::string & song_name)
     return _songs[song_name];
 }
 
-SoundManager::SoundManager()
+SoundManager::SoundManager():
+_is_playing_music(false)
 {
 
 }
 
 SoundManager::~SoundManager()
 {
-
+    for (auto music : _songs)
+        Mix_FreeMusic(music.second);
+    for (auto chunk : _sound_effects)
+        Mix_FreeChunk(chunk.second);
 }

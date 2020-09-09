@@ -1,6 +1,7 @@
 #include "PhysicWorld.hpp"
 #include "Ball.hpp"
 #include "Cushion.hpp"
+#include "SoundManager.hpp"
 
 #include <iostream>
 
@@ -69,7 +70,7 @@ void PhysicWorld::updateWorldObjects(double_t delta_time)
 {
     updateObjectsPosition(delta_time);
     resolveCollisions();
-    applyFrictionForce(delta_time);
+    //applyFrictionForce(delta_time);
 }
 
 void PhysicWorld::resolveCollisions()
@@ -100,6 +101,7 @@ void PhysicWorld::collideBallToBall(Ball * ball1, Ball * ball2)
     if (ball1->getCenter().distance(ball2->getCenter()) > ball1->getRadius() + ball2->getRadius())
         return;
 
+    SoundManager::getInstance()->playSoundEffect("ball_collision_sound_effect.wav");
     makePerfectBallToBallContact(ball1, ball2);
 
     Vector2D un(ball1->getCenter(), ball2->getCenter());
