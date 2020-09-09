@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <cstdint>
 
 bool SoundManager::VERBOSE = false;
 const std::string SoundManager::ERROR_MSG = "\033[0;31m(ERROR) SoundManager:\033[0m\t";
@@ -71,13 +72,14 @@ void SoundManager::playSong(const std::string & song_name)
         throw std::runtime_error(Mix_GetError());
     }
 
+    _is_playing_music = true;
     if (VERBOSE) std::cout << VERBOSE_MSG << "Playing song: " << song_name << std::endl;
 }
 
 void SoundManager::pauseCurrentSong()
 {
     if (isPlayingSong()) {
-        Mix_PausedMusic();
+        Mix_PauseMusic();
         _is_playing_music = false;
     }
 }
@@ -90,9 +92,61 @@ void SoundManager::resumeCurrentSong()
     }
 }
 
+void SoundManager::toggleCurrentSong()
+{
+    if (isPlayingSong())
+        pauseCurrentSong();
+    else
+        resumeCurrentSong();
+}
+
 bool SoundManager::isPlayingSong() const
 {
     return _is_playing_music;
+}
+
+void SoundManager::setSoundEffectsVolume(double_t percent)
+{
+    if (percent < 0.0) percent = 0.0;
+    else if (percent > 100.0) percent = 100.0;
+
+    _sound_effects_volume = percent / 100.0;
+    for (auto sound_effect : _sound_effects)
+        Mix_VolumeChunk(sound_effect.second, int32_t(_master_volume * _sound_effects_volume * 128));
+}
+
+double_t SoundManager::getSoundEffectsVolume() const
+{
+    return _sound_effects_volume * 100;
+}
+
+void SoundManager::setSongsVolume(double_t percent)
+{
+    if (percent < 0.0) percent = 0.0;
+    else if (percent > 100.0) percent = 100.0;
+
+    _songs_volume = percent / 100.0;
+    Mix_VolumeMusic(int32_t(_master_volume * _songs_volume * 128));
+}
+
+double_t SoundManager::getSongsVolume() const
+{
+    return _songs_volume * 100.0;
+}
+
+void SoundManager::setMasterVolume(double_t percent)
+{
+    if (percent < 0.0) percent = 0.0;
+    else if (percent > 100.0) percent = 100.0;
+    
+    _master_volume = percent / 100.0;
+    setSoundEffectsVolume(getSoundEffectsVolume());
+    setSongsVolume(getSongsVolume());
+}
+
+double_t SoundManager::getMasterVolume() const
+{
+    return _master_volume * 100.0;
 }
 
 Mix_Chunk * SoundManager::getChunk(const std::string & sound_effect_name)
@@ -120,7 +174,10 @@ Mix_Music * SoundManager::getMusic(const std::string & song_name)
 }
 
 SoundManager::SoundManager():
-_is_playing_music(false)
+_is_playing_music(false),
+_master_volume(1.0),
+_sound_effects_volume(1.0),
+_songs_volume(1.0)
 {
 
 }

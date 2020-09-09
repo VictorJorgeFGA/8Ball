@@ -21,7 +21,17 @@ public:
 
     void pauseCurrentSong();
     void resumeCurrentSong();
+    void toggleCurrentSong();
     bool isPlayingSong() const;
+
+    void setSoundEffectsVolume(double_t percent);
+    double_t getSoundEffectsVolume() const;
+
+    void setSongsVolume(double_t percent);
+    double_t getSongsVolume() const;
+
+    void setMasterVolume(double_t percent);
+    double_t getMasterVolume() const;
 
 private:
     static bool VERBOSE;
@@ -37,6 +47,9 @@ private:
     ~SoundManager();
 
     bool _is_playing_music;
+    double_t _master_volume;
+    double_t _sound_effects_volume;
+    double_t _songs_volume;
 
     std::map<std::string, Mix_Chunk *> _sound_effects;
     std::map<std::string, Mix_Music *> _songs;
