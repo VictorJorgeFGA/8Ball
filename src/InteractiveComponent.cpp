@@ -49,17 +49,17 @@ void InteractiveComponent::processMouseButtonUp(const SDL_Point & cursor_coordin
 
 void InteractiveComponent::tie()
 {
-    _can_drag = true;
+    _can_drag = false;
 }
 
 void InteractiveComponent::untie()
 {
-    _can_drag = false;
+    _can_drag = true;
 }
 
 bool InteractiveComponent::isTied() const
 {
-    return _can_drag;
+    return !_can_drag;
 }
 
 void InteractiveComponent::activate()

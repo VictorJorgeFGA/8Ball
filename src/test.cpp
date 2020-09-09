@@ -285,3 +285,8 @@ void Test::interactiveComponentTest()
 
     std::cout << '\t' << "Ok" << std::endl;
 }
+
+void Test::physicsTest()
+{
+    
+}

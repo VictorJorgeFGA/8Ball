@@ -1,0 +1,7 @@
+prover textura horizontal e vertical paras as almofadas
+testar colisao almofada bola
+testas colisao bolas
+refatorar codigo de colisao
+adiciona friccao aos objetos do mundo fisico
+criar os pockets e associar a mesa
+organizar as medidas da mesa

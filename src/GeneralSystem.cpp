@@ -5,7 +5,7 @@
 
 void GeneralSystem::INIT_SUBSYSTEMS(bool VERBOSE_MODE)
 {
-    Graphics::startUp();
+    Graphics::startUp("Billiards", 960, 544, "assets/default_icon.png");
     VisualComponent::startUp();
     RunningManager::startUp();
     
