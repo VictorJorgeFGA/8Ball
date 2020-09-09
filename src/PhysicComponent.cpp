@@ -1,5 +1,7 @@
 #include "PhysicComponent.hpp"
 
+#include <iostream>
+
 double_t PhysicComponent::_measurement_scale = 1.0;
 
 double_t PhysicComponent::getScale()
@@ -20,6 +22,18 @@ void PhysicComponent::setVelocity(const Vector2D & new_velocity)
 Vector2D PhysicComponent::getVelocity() const
 {
     return _velocity;
+}
+
+void PhysicComponent::decreaseVelocity(double_t amount)
+{
+    if (_velocity.magnitude() < DBL_EPSILON)
+        return;
+    else if (_velocity.magnitude() < 0.1) {
+        _velocity = Vector2D(0.0, 0.0);
+        return;
+    }
+    _velocity.y(_velocity.y() - amount * (_velocity.y() / _velocity.magnitude()));
+    _velocity.x(_velocity.x() - amount * (_velocity.x() / _velocity.magnitude()));
 }
 
 void PhysicComponent::enableGhost()
