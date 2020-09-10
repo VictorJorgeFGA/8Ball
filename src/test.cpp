@@ -310,7 +310,7 @@ void Test::soundManagerTest()
     SDL_Delay(4000);
 
     std::cout << FUNCTIONALITY_TEST_MSG << "playSong" << std::endl;
-    sound_manager->playSong("test_song.mp3");
+    sound_manager->playSong("test_song.ogg");
     SDL_Delay(10000);
 
     std::cout << FUNCTIONALITY_TEST_MSG << "pauseCurrentSong" << std::endl;
@@ -353,7 +353,7 @@ void Test::soundManagerTest()
 
     std::cout << FUNCTIONALITY_TEST_MSG << "setSongsVolume (30%)" << std::endl;
     sound_manager->setSongsVolume(30.0);
-    sound_manager->playSong("test_song.mp3");
+    sound_manager->playSong("test_song.ogg");
 
     std::cout << FUNCTIONALITY_TEST_MSG << "getSongsVolume" << std::endl;
     if (abs(sound_manager->getSongsVolume() - 30.0) > DBL_EPSILON)
