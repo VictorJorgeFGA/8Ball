@@ -16,13 +16,13 @@ This file contains all game desired functionalities in order.
 		- [ ] Player
 		- [ ] Pocket
 	- [ ] Physics
-		- [ ] Movement and friction
+		- [x] Movement and friction
 		- [x] Collision between balls and cushions
 		- [x] Collision between balls
 		- [ ] Shooting system
-	- [ ] Sound
-		- [ ] Background music
-		- [ ] Sound-effects (collision, winning, losing, pocketing)
+	- [x] Sound
+		- [x] Background music
+		- [x] Sound-effects (collision, winning, losing, pocketing)
 
 - [ ] Input interface (In-game)
 	- [ ] Choosing the force applied on the ball (billiard cue dragging)
