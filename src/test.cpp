@@ -5,6 +5,9 @@
 #include <functional>
 #include <string>
 
+const std::string Test::COMPONENT_TEST_MSG = "\033[0;36mTesting component: \033[0m";
+const std::string Test::FUNCTIONALITY_TEST_MSG = "\t\033[0;35mTesting functionality: \033[0m";
+
 void Test::runTest()
 {
     try {
@@ -13,6 +16,7 @@ void Test::runTest()
         assetsManagerTest();
         visualComponentTest();
         interactiveComponentTest();
+        soundManagerTest();
         std::cout << "\t\033[0;32mTests passed!\033[0m" << std::endl;
     }
     catch (std::runtime_error & e) {
@@ -279,6 +283,95 @@ void Test::interactiveComponentTest()
             std::to_string(button->getGlobalY())
         );
 
+    VisualComponent::shutDown();
+    AssetsManager::shutDown();
+    Graphics::shutDown();
+
+    std::cout << '\t' << "Ok" << std::endl;
+}
+
+void Test::soundManagerTest()
+{
+    std::cout << COMPONENT_TEST_MSG << "SoundManager" << std::endl;
+
+    Graphics::startUp();
+    VisualComponent::startUp();
+    SoundManager::startUp();
+
+    SoundManager::setVerboseMode();
+    SoundManager * sound_manager = SoundManager::getInstance();
+
+    std::cout << FUNCTIONALITY_TEST_MSG << "playSoundEffect" << std::endl;
+    sound_manager->playSoundEffect("sound_effect_test.wav");
+    SDL_Delay(4000);
+
+    std::cout << FUNCTIONALITY_TEST_MSG << "playSoundEffect (with 50% intensity)" << std::endl;
+    sound_manager->playSoundEffect("sound_effect_test.wav", 50.0);
+    SDL_Delay(4000);
+
+    std::cout << FUNCTIONALITY_TEST_MSG << "playSong" << std::endl;
+    sound_manager->playSong("test_song.mp3");
+    SDL_Delay(10000);
+
+    std::cout << FUNCTIONALITY_TEST_MSG << "pauseCurrentSong" << std::endl;
+    sound_manager->pauseCurrentSong();
+    SDL_Delay(5000);
+
+    std::cout << FUNCTIONALITY_TEST_MSG << "resumeCurrentSong" << std::endl;
+    sound_manager->resumeCurrentSong();
+    SDL_Delay(5000);
+
+    std::cout << FUNCTIONALITY_TEST_MSG << "toggleCurrentSong" << std::endl;
+    sound_manager->toggleCurrentSong();
+    SDL_Delay(5000);
+
+    std::cout << FUNCTIONALITY_TEST_MSG << "toggleCurrentSong" << std::endl;
+    sound_manager->toggleCurrentSong();
+    SDL_Delay(5000);
+
+    std::cout << FUNCTIONALITY_TEST_MSG << "isPlayingSong" << std::endl;
+    if (!sound_manager->isPlayingSong())
+        throw std::runtime_error("isPlayingSong test failed! Expected true, got false");
+
+    std::cout << FUNCTIONALITY_TEST_MSG << "stopCurrentSong" << std::endl;
+    sound_manager->stopCurrentSong();
+    SDL_Delay(5000);
+
+    std::cout << FUNCTIONALITY_TEST_MSG << "setSoundEffectsVolume (30%)" << std::endl;
+    sound_manager->setSoundEffectsVolume(30.0);
+    sound_manager->playSoundEffect("sound_effect_test.wav");
+    SDL_Delay(5000);
+
+    std::cout << FUNCTIONALITY_TEST_MSG << "getSoundEffectsVolume" << std::endl;
+    if (abs(sound_manager->getSoundEffectsVolume() - 30.0) > DBL_EPSILON)
+        throw std::runtime_error("getSoundEffectsVolume test failed! Expected 30.0 got " + std::to_string(sound_manager->getSoundEffectsVolume()));
+
+    std::cout << FUNCTIONALITY_TEST_MSG << "setSoundEffectsVolume (100%)" << std::endl;
+    sound_manager->setSoundEffectsVolume(100.0);
+    sound_manager->playSoundEffect("sound_effect_test.wav");
+    SDL_Delay(5000);
+
+    std::cout << FUNCTIONALITY_TEST_MSG << "setSongsVolume (30%)" << std::endl;
+    sound_manager->setSongsVolume(30.0);
+    sound_manager->playSong("test_song.mp3");
+
+    std::cout << FUNCTIONALITY_TEST_MSG << "getSongsVolume" << std::endl;
+    if (abs(sound_manager->getSongsVolume() - 30.0) > DBL_EPSILON)
+        throw std::runtime_error("getSongsVolume test failed! Expected 30.0 got " + std::to_string(sound_manager->getSongsVolume()));
+
+    SDL_Delay(10000);
+
+    std::cout << FUNCTIONALITY_TEST_MSG << "setMasterVolume (100%)" << std::endl;
+    sound_manager->setMasterVolume(100.0);
+    sound_manager->playSoundEffect("sound_effect_test.wav");
+    SDL_Delay(5000);
+
+    std::cout << FUNCTIONALITY_TEST_MSG << "setMasterVolume (40%)" << std::endl;
+    sound_manager->setMasterVolume(40.0);
+    sound_manager->playSoundEffect("sound_effect_test.wav");
+    SDL_Delay(10000);
+
+    SoundManager::shutDown();
     VisualComponent::shutDown();
     AssetsManager::shutDown();
     Graphics::shutDown();
