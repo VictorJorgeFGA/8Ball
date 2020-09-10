@@ -4,6 +4,8 @@
 #include <iostream>
 #include <ios>
 
+#define TEST
+
 int main(int argc, char * argv[])
 {
 #ifdef TEST

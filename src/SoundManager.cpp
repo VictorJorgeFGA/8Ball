@@ -16,8 +16,6 @@ void SoundManager::startUp()
         std::cerr << ERROR_MSG << "Attempt to initialize SoundManager more than once." << std::endl;
         throw std::runtime_error("SoundManager startUp bad call.");
     }
-    VERBOSE = false;
-    _instance = new SoundManager();
 
     if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) {
         std::cerr << ERROR_MSG << "Unable to initialize SDL_AUDIO system." << std::endl;
@@ -28,6 +26,10 @@ void SoundManager::startUp()
         std::cerr << ERROR_MSG << "Unable to initialize SDL_Mixer." << std::endl;
         throw std::runtime_error(Mix_GetError());
     }
+
+    _instance = new SoundManager();
+
+    if (VERBOSE) std::cout << VERBOSE_MSG << "Starting up!" << std::endl;
 }
 
 void SoundManager::shutDown()
@@ -36,8 +38,17 @@ void SoundManager::shutDown()
         std::cerr << ERROR_MSG << "Attempt to shut down SoundManager before initialization." << std::endl;
         throw std::runtime_error("SoundManager shutDown bad call.");
     }
+
+    Mix_HaltMusic();
+    int32_t ALL_CHANNELS = -1;
+    Mix_HaltChannel(ALL_CHANNELS);
+
     delete _instance;
     _instance = nullptr;
+
+    Mix_CloseAudio();
+
+    if (VERBOSE) std::cout << VERBOSE_MSG << "Shutting down!" << std::endl;
 }
 
 SoundManager * SoundManager::getInstance()
@@ -52,6 +63,19 @@ SoundManager * SoundManager::getInstance()
 void SoundManager::setVerboseMode()
 {
     VERBOSE = true;
+}
+
+void SoundManager::playSoundEffect(const std::string & sound_effect_name, double_t sound_intensity_percentage)
+{
+    if (sound_intensity_percentage < 0.0) sound_intensity_percentage = 0.0;
+    else if (sound_intensity_percentage > 100.0) sound_intensity_percentage = 100.0;
+
+    sound_intensity_percentage /= 100.0;
+
+    Mix_Chunk * sound_effect = getChunk(sound_effect_name);
+    int32_t previous_volume = Mix_VolumeChunk(sound_effect, -1);
+    Mix_VolumeChunk(sound_effect, int32_t(previous_volume * sound_intensity_percentage));
+    playSoundEffect(sound_effect_name);
 }
 
 void SoundManager::playSoundEffect(const std::string & sound_effect_name)
@@ -72,24 +96,31 @@ void SoundManager::playSong(const std::string & song_name)
         throw std::runtime_error(Mix_GetError());
     }
 
-    _is_playing_music = true;
     if (VERBOSE) std::cout << VERBOSE_MSG << "Playing song: " << song_name << std::endl;
 }
 
 void SoundManager::pauseCurrentSong()
 {
-    if (isPlayingSong()) {
+    if (Mix_PlayingMusic() && !Mix_PausedMusic()) {
         Mix_PauseMusic();
-        _is_playing_music = false;
+        if (VERBOSE) std::cout << VERBOSE_MSG << "Pause song." << std::endl;
     }
+    else if (VERBOSE && !Mix_PlayingMusic())
+        std::cout << VERBOSE_MSG << "Warning (pauseCurrentSong): there is no active song to pause." << std::endl;
+    else if (VERBOSE && Mix_PausedMusic())
+        std::cout << VERBOSE_MSG << "Warning (pauseCurrentSong): current song is already paused." << std::endl;
 }
 
 void SoundManager::resumeCurrentSong()
 {
-    if (!isPlayingSong()) {
+    if (Mix_PlayingMusic() && Mix_PausedMusic()) {
         Mix_ResumeMusic();
-        _is_playing_music = true;
+        if (VERBOSE) std::cout << VERBOSE_MSG << "Resume song." << std::endl;
     }
+    else if (VERBOSE && !Mix_PlayingMusic())
+        std::cout << VERBOSE_MSG << "Warning (pauseCurrentSong): there is no active song to resume." << std::endl;
+    else if (VERBOSE && !Mix_PausedMusic())
+        std::cout << VERBOSE_MSG << "Warning (pauseCurrentSong): current song is already resumed." << std::endl;
 }
 
 void SoundManager::toggleCurrentSong()
@@ -102,7 +133,14 @@ void SoundManager::toggleCurrentSong()
 
 bool SoundManager::isPlayingSong() const
 {
-    return _is_playing_music;
+    return Mix_PlayingMusic() && !Mix_PausedMusic();
+}
+
+void SoundManager::stopCurrentSong()
+{
+    if (Mix_PlayingMusic())
+        Mix_HaltMusic();
+    else if (VERBOSE) std::cout << VERBOSE_MSG << "Warning (stopCurrentSong): there is no active song to stop." << std::endl;
 }
 
 void SoundManager::setSoundEffectsVolume(double_t percent)
@@ -113,6 +151,8 @@ void SoundManager::setSoundEffectsVolume(double_t percent)
     _sound_effects_volume = percent / 100.0;
     for (auto sound_effect : _sound_effects)
         Mix_VolumeChunk(sound_effect.second, int32_t(_master_volume * _sound_effects_volume * 128));
+
+    if (VERBOSE) std::cout << VERBOSE_MSG << "Setting sound effects volume to " << percent << '%' << std::endl;
 }
 
 double_t SoundManager::getSoundEffectsVolume() const
@@ -127,6 +167,8 @@ void SoundManager::setSongsVolume(double_t percent)
 
     _songs_volume = percent / 100.0;
     Mix_VolumeMusic(int32_t(_master_volume * _songs_volume * 128));
+
+    if (VERBOSE) std::cout << VERBOSE_MSG << "Setting songs volume to " << percent << '%' << std::endl;
 }
 
 double_t SoundManager::getSongsVolume() const
@@ -142,6 +184,8 @@ void SoundManager::setMasterVolume(double_t percent)
     _master_volume = percent / 100.0;
     setSoundEffectsVolume(getSoundEffectsVolume());
     setSongsVolume(getSongsVolume());
+
+    if (VERBOSE) std::cout << VERBOSE_MSG << "Setting master volume to " << percent << '%' << std::endl;
 }
 
 double_t SoundManager::getMasterVolume() const
@@ -157,6 +201,8 @@ Mix_Chunk * SoundManager::getChunk(const std::string & sound_effect_name)
             std::cerr << ERROR_MSG << "Unable to load sound effect: " << sound_effect_name << std::endl;;
             throw std::runtime_error(Mix_GetError());
         }
+
+        if (VERBOSE) std::cout << VERBOSE_MSG << "Loading sound effect \"" << sound_effect_name << '\"' << std::endl;
     }
     return _sound_effects[sound_effect_name];
 }
@@ -169,12 +215,13 @@ Mix_Music * SoundManager::getMusic(const std::string & song_name)
             std::cerr << ERROR_MSG << "Unable to load song: " << song_name << std::endl;
             throw std::runtime_error(Mix_GetError());
         }
+
+        if (VERBOSE) std::cout << VERBOSE_MSG << "Loading song \"" << song_name << '\"' << std::endl;
     }
     return _songs[song_name];
 }
 
 SoundManager::SoundManager():
-_is_playing_music(false),
 _master_volume(1.0),
 _sound_effects_volume(1.0),
 _songs_volume(1.0)

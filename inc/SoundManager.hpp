@@ -16,6 +16,7 @@ public:
 
     static void setVerboseMode();
 
+    void playSoundEffect(const std::string & sound_effect_name, double_t sound_intensity_percentage);
     void playSoundEffect(const std::string & sound_effect_name);
     void playSong(const std::string & song_name);
 
@@ -23,6 +24,8 @@ public:
     void resumeCurrentSong();
     void toggleCurrentSong();
     bool isPlayingSong() const;
+
+    void stopCurrentSong();
 
     void setSoundEffectsVolume(double_t percent);
     double_t getSoundEffectsVolume() const;
@@ -46,7 +49,6 @@ private:
     SoundManager();
     ~SoundManager();
 
-    bool _is_playing_music;
     double_t _master_volume;
     double_t _sound_effects_volume;
     double_t _songs_volume;
