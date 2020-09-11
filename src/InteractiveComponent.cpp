@@ -19,17 +19,18 @@ void InteractiveComponent::processMouseButtonDown(const SDL_Point & cursor_coord
 
 void InteractiveComponent::processMouseMotion(const SDL_Point & cursor_coordinates)
 {
-    if (_selected_component == nullptr || _selected_component->isTied())
+    if (_selected_component == nullptr)
         return;
-
-    int32_t delta_x = cursor_coordinates.x - _selected_component->_initial_dragging_position.x;
-    int32_t delta_y = cursor_coordinates.y - _selected_component->_initial_dragging_position.y;
-    
-    if (SDL_abs(delta_x) > 2 || SDL_abs(delta_y) > 2) {
-        _selected_component->setGlobalX(delta_x + _selected_component->_initial_hitbox_position.x);
-        _selected_component->setGlobalY(delta_y + _selected_component->_initial_hitbox_position.y);
-        _selected_component->reactToDragging(cursor_coordinates);
+    else if (!_selected_component->isTied()) {
+        int32_t delta_x = cursor_coordinates.x - _selected_component->_initial_dragging_position.x;
+        int32_t delta_y = cursor_coordinates.y - _selected_component->_initial_dragging_position.y;
+        
+        if (SDL_abs(delta_x) > 2 || SDL_abs(delta_y) > 2) {
+            _selected_component->setGlobalX(delta_x + _selected_component->_initial_hitbox_position.x);
+            _selected_component->setGlobalY(delta_y + _selected_component->_initial_hitbox_position.y);
+        }
     }
+    _selected_component->reactToDragging(cursor_coordinates);
 }
 
 void InteractiveComponent::processMouseButtonUp(const SDL_Point & cursor_coordinates)
