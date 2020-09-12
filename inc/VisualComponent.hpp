@@ -31,7 +31,6 @@ public:
     SDL_Texture * getTexture();
 
     SDL_Rect getGlobalBody() const;
-    const SDL_Rect * getGlobalBodyReference() const;
     SDL_Rect getRelativeBody() const;
 
     int32_t getGlobalX() const;

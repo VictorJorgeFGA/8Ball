@@ -126,11 +126,6 @@ SDL_Rect VisualComponent::getGlobalBody() const
     return {getGlobalX(), getGlobalY(), getWidth(), getHeight()};
 }
 
-const SDL_Rect * VisualComponent::getGlobalBodyReference() const
-{
-    return &_body;
-}
-
 SDL_Rect VisualComponent::getRelativeBody() const
 {
     return _body;

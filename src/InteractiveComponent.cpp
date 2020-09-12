@@ -69,7 +69,7 @@ void InteractiveComponent::processMouseMotion(const SDL_Point & cursor_coordinat
                 x = Helpers::min(x, parent->getGlobalX() + parent->getWidth() - _selected_component->getWidth());
 
                 y = Helpers::max(y, parent->getGlobalY());
-                y = Helpers::min(y, parent->getGlobalY() + parent->getWidth() - _selected_component->getHeight());
+                y = Helpers::min(y, parent->getGlobalY() + parent->getHeight() - _selected_component->getHeight());
                 
                 _selected_component->setGlobalX(x);
                 _selected_component->setGlobalY(y);
@@ -146,9 +146,11 @@ bool InteractiveComponent::isActive() const
 
 InteractiveComponent * InteractiveComponent::getComponentByClickCoordinates(const SDL_Point & coordinates)
 {
-    for (auto component : _components)
-        if (component->isActive() && SDL_PointInRect(&coordinates, component->getGlobalBodyReference()) == SDL_TRUE)
+    SDL_Rect component_rect;
+    for (auto component : _components) {
+        if (component->isActive() && (component_rect = component->getGlobalBody(), (SDL_PointInRect(&coordinates, &component_rect) == SDL_TRUE)))
             return component;
+    }
     return nullptr;
 }
 
