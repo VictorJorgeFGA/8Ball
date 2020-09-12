@@ -7,8 +7,12 @@
 #include <string>
 #include <functional>
 
+class ScrollBar;
+class ScrollButton;
+
 class ScrollBar : public InteractiveComponent
 {
+friend ScrollButton;
 public:
     enum ScrollDirection {
         HORIZONTAL,
@@ -16,51 +20,46 @@ public:
     };
 
     static ScrollBar * newScrollBar(ScrollDirection scroll_direction,
-                                    uint16_t scrollbar_length = 80, // in pixels
-                                    uint16_t scrollbar_margin = 5, // in pixels
-                                    uint16_t scrollbar_porportion = 6, // x:1 - for example: 8:1
-                                    const std::string & fillbar_texture_name = "scroll_fillbar_texture.png",
-                                    const std::string & scrollbar_body_texture_name = "scrollbar_body_texture.png",
-                                    const std::string & scroll_button_texture_name = "scroll_button_texture.png");
+                                    uint16_t proportion = 8,
+                                    uint16_t length = 160,
+                                    const std::string & scrollbutton_texture_name = "default_scrollbutton_texture.png");
 
-    // scrolling_event_callback will be called whenever scrollbar changes its state
-    // getFilledPercentage will be assigned to callback function argument
-    void setScrollingEventCallback(std::function<void(double_t)> scrolling_event_callback);
+    // Callback function will be called every time scrollbar changes its "filled" value
+    void setCallbackFunction(std::function<void(double_t)> callback);
 
-    double_t getFilledPercentage() const;
-
-    void updateScrollBarSize(int32_t length);
+    double_t getScrolledPercentage() const;
 
 private:
-    static void emptyCallback(double_t x);
-
-    int32_t getMaxFillSize() const;
-    int32_t getFilledSize() const;
-
-    int32_t getMinScrollX() const;
-    int32_t getMaxScrollX() const;
-
-    int32_t getMinScrollY() const;
-    int32_t getMaxScrollY() const;
-
-    void setScrollX(int32_t x);
-    void setScrollY(int32_t y);
+    static void emptyCallback(double_t);
 
     ScrollBar();
     virtual ~ScrollBar();
 
     uint16_t _proportion;
-    uint16_t _scrollbar_margin;
-    SolidImage * _fillbar_texture;
-    SolidImage * _scroll_button;
+    ScrollButton * _scrollbutton;
     ScrollDirection _scroll_direction;
-    std::function<void(double_t)> _call_back;
+    std::function<void(double_t)> _callback;
+
+};
+
+
+
+class ScrollButton : public InteractiveComponent
+{
+public:
+    static ScrollButton * newScrollButton(ScrollBar * parent_scroolbar,
+                                          uint16_t width,
+                                          uint16_t height,
+                                          const std::string & scrollbutton_texture_name);
+
+private:
+    ScrollButton();
+    virtual ~ScrollButton();
+
+    ScrollBar * _parent_scrollbar;
 
 protected:
-
-    virtual void reactToClick(const SDL_Point & cursor_coordinates);
     virtual void reactToDragging(const SDL_Point & cursor_coordinates);
-
 };
 
 #endif
