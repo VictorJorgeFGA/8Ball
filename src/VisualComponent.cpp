@@ -20,6 +20,8 @@ void VisualComponent::startUp()
         SCREEN = new VisualComponent();
         SCREEN->setWidth(graphics->getWindowWidth());
         SCREEN->setHeight(graphics->getWindowHeight());
+        SCREEN->setGlobalX(0);
+        SCREEN->setGlobalY(0);
 
         if (VERBOSE) std::cout << VERBOSE_MSG + "Starting up" << std::endl;
     }

@@ -1,4 +1,5 @@
 #include "InteractiveComponent.hpp"
+#include "Helpers.hpp"
 
 #include <stdexcept>
 #include <iostream>
@@ -60,8 +61,18 @@ void InteractiveComponent::processMouseMotion(const SDL_Point & cursor_coordinat
             int32_t delta_y = cursor_coordinates.y - _selected_component->_initial_dragging_position.y;
             
             if (SDL_abs(delta_x) > 5 || SDL_abs(delta_y) > 5) {
-                _selected_component->setGlobalX(delta_x + _selected_component->_initial_hitbox_position.x);
-                _selected_component->setGlobalY(delta_y + _selected_component->_initial_hitbox_position.y);
+                int32_t x = delta_x + _selected_component->_initial_hitbox_position.x;
+                int32_t y = delta_y + _selected_component->_initial_hitbox_position.y;
+                
+                VisualComponent * parent = _selected_component->getParent();
+                x = Helpers::max(x, parent->getGlobalX());
+                x = Helpers::min(x, parent->getGlobalX() + parent->getWidth() - _selected_component->getWidth());
+
+                y = Helpers::max(y, parent->getGlobalY());
+                y = Helpers::min(y, parent->getGlobalY() + parent->getWidth() - _selected_component->getHeight());
+                
+                _selected_component->setGlobalX(x);
+                _selected_component->setGlobalY(y);
             }
         }
         _selected_component->reactToDragging(cursor_coordinates);
