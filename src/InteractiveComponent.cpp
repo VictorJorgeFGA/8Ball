@@ -59,21 +59,18 @@ void InteractiveComponent::processMouseMotion(const SDL_Point & cursor_coordinat
         if (!_selected_component->isTied()) {
             int32_t delta_x = cursor_coordinates.x - _selected_component->_initial_dragging_position.x;
             int32_t delta_y = cursor_coordinates.y - _selected_component->_initial_dragging_position.y;
+            int32_t x = delta_x + _selected_component->_initial_hitbox_position.x;
+            int32_t y = delta_y + _selected_component->_initial_hitbox_position.y;
             
-            if (SDL_abs(delta_x) > 5 || SDL_abs(delta_y) > 5) {
-                int32_t x = delta_x + _selected_component->_initial_hitbox_position.x;
-                int32_t y = delta_y + _selected_component->_initial_hitbox_position.y;
-                
-                VisualComponent * parent = _selected_component->getParent();
-                x = Helpers::max(x, parent->getGlobalX());
-                x = Helpers::min(x, parent->getGlobalX() + parent->getWidth() - _selected_component->getWidth());
+            VisualComponent * parent = _selected_component->getParent();
+            x = Helpers::max(x, parent->getGlobalX());
+            x = Helpers::min(x, parent->getGlobalX() + parent->getWidth() - _selected_component->getWidth());
 
-                y = Helpers::max(y, parent->getGlobalY());
-                y = Helpers::min(y, parent->getGlobalY() + parent->getHeight() - _selected_component->getHeight());
-                
-                _selected_component->setGlobalX(x);
-                _selected_component->setGlobalY(y);
-            }
+            y = Helpers::max(y, parent->getGlobalY());
+            y = Helpers::min(y, parent->getGlobalY() + parent->getHeight() - _selected_component->getHeight());
+            
+            _selected_component->setGlobalX(x);
+            _selected_component->setGlobalY(y);
         }
         _selected_component->reactToDragging(cursor_coordinates);
     } else {
@@ -95,7 +92,7 @@ void InteractiveComponent::processMouseButtonUp(const SDL_Point & cursor_coordin
 
     int32_t delta_x = cursor_coordinates.x - _selected_component->_initial_dragging_position.x;
     int32_t delta_y = cursor_coordinates.y - _selected_component->_initial_dragging_position.y;
-    if (SDL_abs(delta_x) <= 5 && SDL_abs(delta_y) <= 5) {
+    if (SDL_abs(delta_x) <= 2 && SDL_abs(delta_y) <= 2) {
         _selected_component->reactToClick(cursor_coordinates);
         _focused_component = _selected_component;
     }
@@ -151,7 +148,7 @@ InteractiveComponent * InteractiveComponent::getComponentByClickCoordinates(cons
         if (component->isActive() && (component_rect = component->getGlobalBody(), (SDL_PointInRect(&coordinates, &component_rect) == SDL_TRUE)))
             return component;
     }
-    return nullptr;
+    return NEUTRAL_COMPONENT;
 }
 
 InteractiveComponent::InteractiveComponent():

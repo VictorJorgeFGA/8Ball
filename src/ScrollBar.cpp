@@ -28,6 +28,8 @@ ScrollBar * ScrollBar::newScrollBar(ScrollDirection scroll_direction,
     scrollbar->_scrollbutton = scrollbutton;
 
     scrollbar->deactivate();
+
+    return scrollbar;
 }
 
 void ScrollBar::setCallbackFunction(std::function<void(double_t)> callback)
@@ -78,6 +80,8 @@ ScrollButton * ScrollButton::newScrollButton(ScrollBar * parent_scrollbar,
 
     scrollbutton->setParent(parent_scrollbar);
     scrollbutton->_parent_scrollbar = parent_scrollbar;
+
+    return scrollbutton;
 }
 
 ScrollButton::ScrollButton()
