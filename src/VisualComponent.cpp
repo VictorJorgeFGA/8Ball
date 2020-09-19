@@ -20,6 +20,8 @@ void VisualComponent::startUp()
         SCREEN = new VisualComponent();
         SCREEN->setWidth(graphics->getWindowWidth());
         SCREEN->setHeight(graphics->getWindowHeight());
+        SCREEN->setGlobalX(0);
+        SCREEN->setGlobalY(0);
 
         if (VERBOSE) std::cout << VERBOSE_MSG + "Starting up" << std::endl;
     }
@@ -122,11 +124,6 @@ SDL_Rect VisualComponent::getGlobalBody() const
         return _body;
    
     return {getGlobalX(), getGlobalY(), getWidth(), getHeight()};
-}
-
-const SDL_Rect * VisualComponent::getGlobalBodyReference() const
-{
-    return &_body;
 }
 
 SDL_Rect VisualComponent::getRelativeBody() const

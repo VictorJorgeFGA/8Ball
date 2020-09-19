@@ -5,6 +5,7 @@
 #include "SolidImage.hpp"
 #include "Table.hpp"
 #include "SoundManager.hpp"
+#include "ScrollBar.hpp"
 
 #include <stdexcept>
 #include <iostream>
@@ -96,9 +97,56 @@ _quit_button(nullptr)
         SDL_PushEvent(&e);
     });
 
+    Button * music_button = Button::newButton("Music");
+    music_button->setClickReaction([](){
+        SoundManager::getInstance()->toggleCurrentSong();
+    });
+
+    Button * down_volume = Button::newButton("Down volume");
+    down_volume->setClickReaction([](){
+        SoundManager * sm = SoundManager::getInstance();
+        sm->setMasterVolume(sm->getMasterVolume() - 10.0);
+    });
+
+    Button * up_volume = Button::newButton("Up volume");
+    up_volume->setClickReaction([](){
+        SoundManager * sm = SoundManager::getInstance();
+        sm->setMasterVolume(sm->getMasterVolume() + 10.0);
+    });
+
+    ScrollBar * volume_scrollbar = ScrollBar::newScrollBar(ScrollBar::HORIZONTAL);
+    volume_scrollbar->setCallbackFunction([](double_t volume){
+        SoundManager::getInstance()->setMasterVolume(volume);
+    });
+    volume_scrollbar->setGlobalX(50);
+    volume_scrollbar->setGlobalY(20);
+
+    ScrollBar * timer_scrollbar = ScrollBar::newScrollBar(ScrollBar::VERTICAL);
+    timer_scrollbar->setRelativeX(10);
+    timer_scrollbar->setRelativeY(70);
+    timer_scrollbar->setCallbackFunction([&](double_t speed){
+        _physics_timer.setTimeScale(speed / 100.0);
+    });
+
     _table = Table::newTable();
+    volume_scrollbar->setParent(_table);
+    timer_scrollbar->setParent(_table);
+
     _quit_button->setParent(_table);
     _quit_button->untie();
+
+    music_button->setRelativeX(_table->getWidth() - music_button->getWidth());
+    music_button->setRelativeY(0);
+    music_button->setParent(_table);
+
+    down_volume->setParent(_table);
+    down_volume->setRelativeX(_table->getWidth() / 2 - down_volume->getWidth());
+    down_volume->setRelativeY(0);
+
+    up_volume->setParent(_table);
+    up_volume->setRelativeX(_table->getWidth() / 2);
+    up_volume->setRelativeY(0);
+
     _physic_world = PhysicWorld::getInstance();
 
     _120FPS_TIME -= _LOOP_TIME;
@@ -109,6 +157,9 @@ _quit_button(nullptr)
     Ball::newBall(2.85, _table->getTableCenter() + Vector2D(20.0, 0.0), 1)->setVelocity({0.0, -55.0});
     Ball::newBall(2.85, _table->getTableCenter() + Vector2D(30.0, 0.0), 1)->setVelocity({55.0, 0.0});
     Ball::newBall(2.85, _table->getTableCenter() + Vector2D(40.0, 0.0), 1)->setVelocity({-50.0, 0.0});
+
+    SoundManager::getInstance()->playSong("test_song.ogg");
+
 }
 
 RunningManager::~RunningManager()
