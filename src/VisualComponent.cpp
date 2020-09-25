@@ -63,6 +63,10 @@ void VisualComponent::setParent(VisualComponent * new_parent)
         return;
     else if (new_parent == nullptr)
         throwException("Attempt to set VisualComponent object parent as nullptr");
+    else if (new_parent == this)
+        throwException("Attempt to set itself as a parent");
+    else if (isAChild(new_parent))
+        throwException("Attempt to set a child as a parent");
 
     if (_parent != nullptr)
         _parent->removeChild(this);
@@ -74,6 +78,15 @@ void VisualComponent::setParent(VisualComponent * new_parent)
 VisualComponent * VisualComponent::getParent() noexcept
 {
     return _parent;
+}
+
+bool VisualComponent::isAChild(VisualComponent * component)
+{
+    for (auto e : _children) {
+        if (e == component)
+            return true;
+    }
+    return false;
 }
 
 std::vector<VisualComponent *> VisualComponent::getChildren() const
@@ -89,15 +102,11 @@ int32_t VisualComponent::countChildren() const noexcept
 void VisualComponent::hide() noexcept
 {
     _is_hide = true;
-    for (auto child : _children)
-        child->hide();
 }
 
 void VisualComponent::show() noexcept
 {
     _is_hide = false;
-    for (auto child : _children)
-        child->show();
 }
 
 bool VisualComponent::isHide() const noexcept
@@ -223,6 +232,13 @@ void VisualComponent::setColor(SDL_Color color) noexcept
 
 void VisualComponent::addChild(VisualComponent * child)
 {
+    if (child == nullptr)
+        throwException("Attempt to push nullptr as a child");
+    else if (child == this)
+        throwException("Attempt to push itself as a child");
+    else if (child == getParent())
+        throwException("Attempt to push parent as a child");
+
     for (auto e : _children) {
         if (e == child)
             return;
@@ -257,12 +273,12 @@ void VisualComponent::draw()
 }
 
 VisualComponent::VisualComponent():
-_parent(nullptr),
 _children(),
+_parent(nullptr),
 _texture(nullptr),
-_body({0,0,0,0}),
-_is_hide(false),
 _rotation_angle(0.0),
+_is_hide(false),
+_body({0,0,0,0}),
 _color({0xff, 0xff, 0xff, 0xff})
 {
 
@@ -291,7 +307,7 @@ VisualComponent::~VisualComponent()
             if (child->getTexture() != nullptr)
                 graphics->drawTexture(child->getTexture(), child->getGlobalBody());
             graphics->updateScreen();
-            SDL_Delay(900);
+            SDL_Delay(500);
         }
 
         delete child;

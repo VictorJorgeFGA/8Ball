@@ -20,6 +20,8 @@ public:
     void setParent(VisualComponent * new_parent);
     VisualComponent * getParent() noexcept;
 
+    bool isAChild(VisualComponent * component);
+
     std::vector<VisualComponent *> getChildren() const;
     int32_t countChildren() const noexcept;
 
