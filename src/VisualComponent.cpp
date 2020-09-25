@@ -71,7 +71,7 @@ void VisualComponent::setParent(VisualComponent * new_parent)
     _parent = new_parent;
 }
 
-VisualComponent * VisualComponent::getParent()
+VisualComponent * VisualComponent::getParent() noexcept
 {
     return _parent;
 }
@@ -235,8 +235,8 @@ void VisualComponent::removeChild(VisualComponent * child)
     auto iter = _children.begin();
     for ( ; iter != _children.end(); iter++)
         if (*iter == child) break;
-
-    _children.erase(iter);
+    if (iter != _children.end())
+        _children.erase(iter);
 }
 
 void VisualComponent::throwException(const std::string & msg)
@@ -270,15 +270,14 @@ _color({0xff, 0xff, 0xff, 0xff})
 
 VisualComponent::VisualComponent(uint16_t width, uint16_t height, SDL_Color color, SDL_Texture * texture):
 _children(),
-_parent(SCREEN),
+_parent(nullptr),
 _texture(texture),
 _rotation_angle(0.0),
 _is_hide(false),
 _body({0, 0, width, height}),
 _color(color)
 {
-    if (SCREEN == nullptr)
-        throwException("Attempt to instance VisualComponent object before class initialization");
+    setParent(getScreenObject());
 }
 
 VisualComponent::~VisualComponent()

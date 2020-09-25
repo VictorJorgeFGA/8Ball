@@ -3,6 +3,8 @@
 #include "SolidImage.hpp"
 #include "SolidText.hpp"
 
+#include <iostream>
+
 Button * Button::newButton( const std::string & button_text,
                             const std::string & background_image_name,
                             const std::string & font_name,
@@ -14,6 +16,7 @@ Button * Button::newButton( const std::string & button_text,
 
     Button * button = new Button(width, height, AssetsManager::getInstance()->getTexture(background_image_name));
     SolidText * text = SolidText::newSolidText(button_text, font_name, font_size, font_color);
+
     text->setParent(button);
     text->setRelativeX((button->getWidth() / 2) - (text->getWidth() / 2));
     text->setRelativeY((button->getHeight() / 2) - (text->getHeight() / 2));

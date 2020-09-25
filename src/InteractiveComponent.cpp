@@ -19,13 +19,11 @@ void InteractiveComponent::startUp()
         throw std::runtime_error("InteractiveComponent exception");
     }
 
-    NEUTRAL_COMPONENT = new InteractiveComponent();
+    NEUTRAL_COMPONENT = new InteractiveComponent(0,0);
     NEUTRAL_COMPONENT->deactivate();
     NEUTRAL_COMPONENT->tie();
     NEUTRAL_COMPONENT->setGlobalX(0);
     NEUTRAL_COMPONENT->setGlobalY(0);
-    NEUTRAL_COMPONENT->setWidth(0);
-    NEUTRAL_COMPONENT->setHeight(0);
 
     _selected_component = NEUTRAL_COMPONENT;
     _overlapped_component = NEUTRAL_COMPONENT;
