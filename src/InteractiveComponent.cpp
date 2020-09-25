@@ -151,13 +151,13 @@ InteractiveComponent * InteractiveComponent::getComponentByClickCoordinates(cons
     return NEUTRAL_COMPONENT;
 }
 
-InteractiveComponent::InteractiveComponent():
+InteractiveComponent::InteractiveComponent(uint16_t width, uint16_t height, SDL_Color color, SDL_Texture * texture):
+VisualComponent(width, height, color, texture),
 _initial_dragging_position({0,0}),
 _initial_hitbox_position({0,0}),
 _can_drag(true),
 _is_active(true)
 {
-    setParent(getScreenObject());
     _components.push_back(this);
 }
 

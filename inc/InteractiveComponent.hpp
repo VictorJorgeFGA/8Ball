@@ -38,6 +38,8 @@ private:
     static InteractiveComponent * _overlapped_component;
     static InteractiveComponent * _focused_component;
 
+    InteractiveComponent();
+    InteractiveComponent(const InteractiveComponent & cpy);
 
     SDL_Point _initial_dragging_position;
     SDL_Point _initial_hitbox_position;
@@ -45,7 +47,11 @@ private:
     bool _is_active;
 
 protected:
-    InteractiveComponent();
+    InteractiveComponent(uint16_t width,
+                         uint16_t height,
+                         SDL_Color color = {0xFF, 0xFF, 0xFF, 0xFF},
+                         SDL_Texture * texture = nullptr);
+
     virtual ~InteractiveComponent();
 
     //The reaction when mouse button is pressed on the component
