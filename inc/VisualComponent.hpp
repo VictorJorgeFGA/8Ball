@@ -58,9 +58,6 @@ public:
     SDL_Color getColor() const noexcept;
     void setColor(SDL_Color color) noexcept;
 
-    void addChild(VisualComponent * child);
-    void removeChild(VisualComponent * child);
-
 private:
     static VisualComponent * SCREEN;
     static bool VERBOSE;
@@ -77,10 +74,13 @@ private:
     SDL_Texture * _texture;
     double _rotation_angle;
     bool _is_hide;
+    bool _changed_state;
     SDL_Rect _body;
     SDL_Color _color;
 
 protected:
+    void addChild(VisualComponent * child);
+    void removeChild(VisualComponent * child);
 
     VisualComponent(uint16_t width, uint16_t height,
                     SDL_Color color = {0xFF, 0xFF, 0xFF, 0xFF},

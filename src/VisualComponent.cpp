@@ -1,7 +1,9 @@
 #include "VisualComponent.hpp"
 #include "Graphics.hpp"
-#include <stdexcept>
+#include "Helpers.hpp"
+
 #include <iostream>
+#include <stdexcept>
 
 VisualComponent * VisualComponent::SCREEN = nullptr;
 bool VisualComponent::VERBOSE = false;
@@ -73,6 +75,11 @@ void VisualComponent::setParent(VisualComponent * new_parent)
 
     new_parent->addChild(this);
     _parent = new_parent;
+
+    setWidth(getWidth());
+    setHeight(getHeight());
+    setRelativeX(0);
+    setRelativeY(0);
 }
 
 VisualComponent * VisualComponent::getParent() noexcept
@@ -151,13 +158,28 @@ void VisualComponent::setGlobalX(int32_t x) noexcept
 {
     if (_parent == nullptr)
         _body.x = x;
-    else
-        _body.x = x - _parent->getGlobalX();
+    else {
+        _body.x = Helpers::min(_parent->getGlobalX() + _parent->getWidth() - getWidth(), x);
+        _body.x = Helpers::max(_body.x, _parent->getGlobalX());
+        _body.x -= _parent->getGlobalX();
+
+        _parent->_changed_state = true;
+    }
+    _changed_state = true;
 }
 
 void VisualComponent::setRelativeX(int32_t x) noexcept
 {
-    _body.x = x;
+    if (_parent != nullptr) {
+        _body.x = Helpers::min(_parent->getWidth() - getWidth(), x);
+        _body.x = Helpers::max(_body.x, 0);
+
+        _parent->_changed_state = true;
+    }
+    else
+        _body.x = x;
+
+    _changed_state = true;
 }
 
 int32_t VisualComponent::getGlobalY() const noexcept
@@ -174,13 +196,28 @@ void VisualComponent::setGlobalY(int32_t y) noexcept
 {
     if (_parent == nullptr)
         _body.y = y;
-    else
-        _body.y = y - _parent->getGlobalY();
+    else {
+        _body.y = Helpers::min(_parent->getGlobalY() + _parent->getHeight() - getHeight(), y);
+        _body.y = Helpers::max(_body.y, _parent->getGlobalY());
+        _body.y -= _parent->getGlobalY();
+
+        _parent->_changed_state = true;
+    }
+    _changed_state = true;
 }
 
 void VisualComponent::setRelativeY(int32_t y) noexcept
 {
-    _body.y = y;
+    if (_parent != nullptr) {
+        _body.y = Helpers::min(_parent->getHeight() - getHeight(), y);
+        _body.y = Helpers::max(_body.y, 0);
+
+        _parent->_changed_state = true;
+    }
+    else
+        _body.y = y;
+
+    _changed_state = true;
 }
 
 uint16_t VisualComponent::getWidth() const noexcept
@@ -190,7 +227,15 @@ uint16_t VisualComponent::getWidth() const noexcept
 
 void VisualComponent::setWidth(uint16_t width) noexcept
 {
-    _body.w = width;
+    if (getParent() != nullptr) {
+        _body.w = Helpers::min(width, getParent()->getWidth());
+        
+        _parent->_changed_state = true;
+    }
+    else
+        _body.w = width;
+
+    _changed_state = true;
 }
 
 uint16_t VisualComponent::getHeight() const noexcept
@@ -200,7 +245,15 @@ uint16_t VisualComponent::getHeight() const noexcept
 
 void VisualComponent::setHeight(uint16_t height) noexcept
 {
-    _body.h = height;
+    if (getParent() != nullptr) {
+        _body.h = Helpers::min(height, getParent()->getHeight());
+    
+        _parent->_changed_state = true;
+    }
+    else
+        _body.h = height;
+
+    _changed_state = true;
 }
 
 double VisualComponent::getRotationAngle() const noexcept
@@ -211,6 +264,9 @@ double VisualComponent::getRotationAngle() const noexcept
 void VisualComponent::setRotationAngle(double rotation_angle) noexcept
 {
     _rotation_angle = rotation_angle;
+
+    _changed_state = true;
+    _parent->_changed_state = true;
 }
 
 void VisualComponent::rotateClockwise(double amount) noexcept
@@ -228,6 +284,30 @@ SDL_Color VisualComponent::getColor() const noexcept
 void VisualComponent::setColor(SDL_Color color) noexcept
 {
     _color = color;
+
+    _changed_state = true;
+}
+
+void VisualComponent::throwException(const std::string & msg)
+{
+    std::cerr << ERROR_MSG << msg << std::endl;
+    throw std::runtime_error("VisualComponent exception");
+}
+
+void VisualComponent::draw()
+{
+    if (_texture != nullptr && !_is_hide && _changed_state) {
+        std::cout << "rendering" << std::endl;
+        graphics->drawTexture(_texture, getGlobalBody(), getRotationAngle());
+    }
+    else if (_texture == nullptr && !_is_hide && _changed_state) {
+        graphics->drawRectangle(getGlobalBody(), _color);
+        std::cout << "Rendering" << std::endl;
+    }
+    
+    _changed_state = false;
+    for (auto child : _children)
+        child->draw();
 }
 
 void VisualComponent::addChild(VisualComponent * child)
@@ -255,29 +335,13 @@ void VisualComponent::removeChild(VisualComponent * child)
         _children.erase(iter);
 }
 
-void VisualComponent::throwException(const std::string & msg)
-{
-    std::cerr << ERROR_MSG << msg << std::endl;
-    throw std::runtime_error("VisualComponent exception");
-}
-
-void VisualComponent::draw()
-{
-    if (_texture != nullptr && !_is_hide)
-        graphics->drawTexture(_texture, getGlobalBody(), getRotationAngle());
-    else if (_texture == nullptr && !_is_hide)
-        graphics->drawRectangle(getGlobalBody(), _color);
-    
-    for (auto child : _children)
-        child->draw();
-}
-
 VisualComponent::VisualComponent():
 _children(),
 _parent(nullptr),
 _texture(nullptr),
 _rotation_angle(0.0),
 _is_hide(false),
+_changed_state(false),
 _body({0,0,0,0}),
 _color({0xff, 0xff, 0xff, 0xff})
 {
@@ -290,6 +354,7 @@ _parent(nullptr),
 _texture(texture),
 _rotation_angle(0.0),
 _is_hide(false),
+_changed_state(false),
 _body({0, 0, width, height}),
 _color(color)
 {

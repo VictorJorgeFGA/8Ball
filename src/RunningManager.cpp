@@ -40,10 +40,10 @@ void RunningManager::runProgram()
         while (SDL_PollEvent(&_event) != 0)
             processEvent();
 
-        if (_physics_timer.getElapsedTime() >= _120FPS_TIME) {
-            _physic_world->updateWorldObjects(_physics_timer.getElapsedTime());
-            _physics_timer.reset();
-        }
+        // if (_physics_timer.getElapsedTime() >= _120FPS_TIME) {
+        //     _physic_world->updateWorldObjects(_physics_timer.getElapsedTime());
+        //     _physics_timer.reset();
+        // }
         
         if (_rendering_timer.getElapsedTime() >= _60FPS_TIME) {
             VisualComponent::drawComponents();
@@ -90,75 +90,77 @@ _60FPS_TIME(1.0/60.0),
 _30FPS_TIME(1.0/30.0),
 _quit_button(nullptr)
 {
-    _quit_button = Button::newButton("Sair");
-    _quit_button->setClickReaction([](){
-        SDL_Event e;
-        e.type = SDL_QUIT;
-        SDL_PushEvent(&e);
-    });
+    SolidImage * img = SolidImage::newSolidImage("ball6_test.png", 100, 100);
 
-    Button * music_button = Button::newButton("Music");
-    music_button->setClickReaction([](){
-        SoundManager::getInstance()->toggleCurrentSong();
-    });
+    // _quit_button = Button::newButton("Sair");
+    // _quit_button->setClickReaction([](){
+    //     SDL_Event e;
+    //     e.type = SDL_QUIT;
+    //     SDL_PushEvent(&e);
+    // });
 
-    Button * down_volume = Button::newButton("Down volume");
-    down_volume->setClickReaction([](){
-        SoundManager * sm = SoundManager::getInstance();
-        sm->setMasterVolume(sm->getMasterVolume() - 10.0);
-    });
+    // Button * music_button = Button::newButton("Music");
+    // music_button->setClickReaction([](){
+    //     SoundManager::getInstance()->toggleCurrentSong();
+    // });
 
-    Button * up_volume = Button::newButton("Up volume");
-    up_volume->setClickReaction([](){
-        SoundManager * sm = SoundManager::getInstance();
-        sm->setMasterVolume(sm->getMasterVolume() + 10.0);
-    });
+    // Button * down_volume = Button::newButton("Down volume");
+    // down_volume->setClickReaction([](){
+    //     SoundManager * sm = SoundManager::getInstance();
+    //     sm->setMasterVolume(sm->getMasterVolume() - 10.0);
+    // });
 
-    ScrollBar * volume_scrollbar = ScrollBar::newScrollBar(ScrollBar::HORIZONTAL);
-    volume_scrollbar->setCallbackFunction([](double_t volume){
-        SoundManager::getInstance()->setMasterVolume(volume);
-    });
-    volume_scrollbar->setGlobalX(50);
-    volume_scrollbar->setGlobalY(20);
+    // Button * up_volume = Button::newButton("Up volume");
+    // up_volume->setClickReaction([](){
+    //     SoundManager * sm = SoundManager::getInstance();
+    //     sm->setMasterVolume(sm->getMasterVolume() + 10.0);
+    // });
 
-    ScrollBar * timer_scrollbar = ScrollBar::newScrollBar(ScrollBar::VERTICAL);
-    timer_scrollbar->setRelativeX(10);
-    timer_scrollbar->setRelativeY(70);
-    timer_scrollbar->setCallbackFunction([&](double_t speed){
-        _physics_timer.setTimeScale(speed / 100.0);
-    });
+    // ScrollBar * volume_scrollbar = ScrollBar::newScrollBar(ScrollBar::HORIZONTAL);
+    // volume_scrollbar->setCallbackFunction([](double_t volume){
+    //     SoundManager::getInstance()->setMasterVolume(volume);
+    // });
+    // volume_scrollbar->setGlobalX(50);
+    // volume_scrollbar->setGlobalY(20);
 
-    _table = Table::newTable();
-    volume_scrollbar->setParent(_table);
-    timer_scrollbar->setParent(_table);
+    // ScrollBar * timer_scrollbar = ScrollBar::newScrollBar(ScrollBar::VERTICAL);
+    // timer_scrollbar->setRelativeX(10);
+    // timer_scrollbar->setRelativeY(70);
+    // timer_scrollbar->setCallbackFunction([&](double_t speed){
+    //     _physics_timer.setTimeScale(speed / 100.0);
+    // });
 
-    _quit_button->setParent(_table);
-    _quit_button->untie();
+    // _table = Table::newTable();
+    // volume_scrollbar->setParent(_table);
+    // timer_scrollbar->setParent(_table);
 
-    music_button->setRelativeX(_table->getWidth() - music_button->getWidth());
-    music_button->setRelativeY(0);
-    music_button->setParent(_table);
+    // _quit_button->setParent(_table);
+    // _quit_button->untie();
 
-    down_volume->setParent(_table);
-    down_volume->setRelativeX(_table->getWidth() / 2 - down_volume->getWidth());
-    down_volume->setRelativeY(0);
+    // music_button->setRelativeX(_table->getWidth() - music_button->getWidth());
+    // music_button->setRelativeY(0);
+    // music_button->setParent(_table);
 
-    up_volume->setParent(_table);
-    up_volume->setRelativeX(_table->getWidth() / 2);
-    up_volume->setRelativeY(0);
+    // down_volume->setParent(_table);
+    // down_volume->setRelativeX(_table->getWidth() / 2 - down_volume->getWidth());
+    // down_volume->setRelativeY(0);
 
-    _physic_world = PhysicWorld::getInstance();
+    // up_volume->setParent(_table);
+    // up_volume->setRelativeX(_table->getWidth() / 2);
+    // up_volume->setRelativeY(0);
 
-    _120FPS_TIME -= _LOOP_TIME;
-    _60FPS_TIME -= _LOOP_TIME;
-    _30FPS_TIME -= _LOOP_TIME;
+    // _physic_world = PhysicWorld::getInstance();
 
-    Ball::newBall(2.85, _table->getTableCenter() + Vector2D(10.0, 0.0), 1)->setVelocity({0.0, 55.0});
-    Ball::newBall(2.85, _table->getTableCenter() + Vector2D(20.0, 0.0), 1)->setVelocity({0.0, -55.0});
-    Ball::newBall(2.85, _table->getTableCenter() + Vector2D(30.0, 0.0), 1)->setVelocity({55.0, 0.0});
-    Ball::newBall(2.85, _table->getTableCenter() + Vector2D(40.0, 0.0), 1)->setVelocity({-50.0, 0.0});
+    // _120FPS_TIME -= _LOOP_TIME;
+    // _60FPS_TIME -= _LOOP_TIME;
+    // _30FPS_TIME -= _LOOP_TIME;
 
-    SoundManager::getInstance()->playSong("test_song.ogg");
+    // Ball::newBall(2.85, _table->getTableCenter() + Vector2D(10.0, 0.0), 1)->setVelocity({0.0, 55.0});
+    // Ball::newBall(2.85, _table->getTableCenter() + Vector2D(20.0, 0.0), 1)->setVelocity({0.0, -55.0});
+    // Ball::newBall(2.85, _table->getTableCenter() + Vector2D(30.0, 0.0), 1)->setVelocity({55.0, 0.0});
+    // Ball::newBall(2.85, _table->getTableCenter() + Vector2D(40.0, 0.0), 1)->setVelocity({-50.0, 0.0});
+
+    // SoundManager::getInstance()->playSong("test_song.ogg");
 
 }
 
