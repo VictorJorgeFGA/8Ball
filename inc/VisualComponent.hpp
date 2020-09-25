@@ -18,43 +18,43 @@ public:
     static VisualComponent * getScreenObject();
 
     void setParent(VisualComponent * new_parent);
-    VisualComponent * getParent();
+    VisualComponent * getParent() noexcept;
 
     std::vector<VisualComponent *> getChildren() const;
-    int32_t countChildren() const;
+    int32_t countChildren() const noexcept;
 
-    void hide();
-    void show();
-    bool isHide() const;
+    void hide() noexcept;
+    void show() noexcept;
+    bool isHide() const noexcept;
 
-    void setTexture(SDL_Texture * texture);
-    SDL_Texture * getTexture();
+    void setTexture(SDL_Texture * texture) noexcept;
+    SDL_Texture * getTexture() noexcept;
 
-    SDL_Rect getGlobalBody() const;
-    SDL_Rect getRelativeBody() const;
+    SDL_Rect getGlobalBody() const noexcept;
+    SDL_Rect getRelativeBody() const noexcept;
 
-    int32_t getGlobalX() const;
-    int32_t getRelativeX() const;
-    void setGlobalX(int32_t x);
-    void setRelativeX(int32_t x);
+    int32_t getGlobalX() const noexcept;
+    int32_t getRelativeX() const noexcept;
+    void setGlobalX(int32_t x) noexcept;
+    void setRelativeX(int32_t x) noexcept;
 
-    int32_t getGlobalY() const;
-    int32_t getRelativeY() const;
-    void setGlobalY(int32_t y);
-    void setRelativeY(int32_t y);
+    int32_t getGlobalY() const noexcept;
+    int32_t getRelativeY() const noexcept;
+    void setGlobalY(int32_t y) noexcept;
+    void setRelativeY(int32_t y) noexcept;
 
-    int32_t getWidth() const;
-    void setWidth(int32_t width);
+    uint16_t getWidth() const noexcept;
+    void setWidth(uint16_t width) noexcept;
 
-    int32_t getHeight() const;
-    void setHeight(int32_t height);
+    uint16_t getHeight() const noexcept;
+    void setHeight(uint16_t height) noexcept;
 
-    double getRotationAngle() const;
-    void setRotationAngle(double rotation_angle);
-    void rotateClockwise(double amount);
+    double getRotationAngle() const noexcept;
+    void setRotationAngle(double rotation_angle) noexcept;
+    void rotateClockwise(double amount) noexcept;
 
-    SDL_Color getColor() const;
-    void setColor(SDL_Color color);
+    SDL_Color getColor() const noexcept;
+    void setColor(SDL_Color color) noexcept;
 
     void addChild(VisualComponent * child);
     void removeChild(VisualComponent * child);
@@ -63,21 +63,27 @@ private:
     static VisualComponent * SCREEN;
     static bool VERBOSE;
     static const std::string VERBOSE_MSG;
+    static const std::string ERROR_MSG;
     static Graphics * graphics;
+    static void throwException(const std::string & msg);
 
     void draw();
+    VisualComponent();
     
-    VisualComponent * _parent;
     std::vector<VisualComponent *> _children;
+    VisualComponent * _parent;
     SDL_Texture * _texture;
-    SDL_Rect _body;
-    bool _is_hide;
     double _rotation_angle;
+    bool _is_hide;
+    SDL_Rect _body;
     SDL_Color _color;
 
 protected:
 
-    VisualComponent();
+    VisualComponent(uint16_t width, uint16_t height,
+                    SDL_Color color = {0xFF, 0xFF, 0xFF, 0xFF},
+                    SDL_Texture * texture = nullptr);
+
     virtual ~VisualComponent();
 };
 
