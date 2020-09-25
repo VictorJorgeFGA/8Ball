@@ -55,7 +55,8 @@ void ScrollBar::emptyCallback(double_t x)
 
 }
 
-ScrollBar::ScrollBar()
+ScrollBar::ScrollBar():
+InteractiveComponent(0, 0)
 {
 
 }
@@ -84,7 +85,8 @@ ScrollButton * ScrollButton::newScrollButton(ScrollBar * parent_scrollbar,
     return scrollbutton;
 }
 
-ScrollButton::ScrollButton()
+ScrollButton::ScrollButton():
+InteractiveComponent(0,0)
 {
 
 }
