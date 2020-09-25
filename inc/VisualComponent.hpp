@@ -53,6 +53,9 @@ public:
     void setRotationAngle(double rotation_angle);
     void rotateClockwise(double amount);
 
+    SDL_Color getColor() const;
+    void setColor(SDL_Color color);
+
     void addChild(VisualComponent * child);
     void removeChild(VisualComponent * child);
 
@@ -64,13 +67,13 @@ private:
 
     void draw();
     
-
     VisualComponent * _parent;
     std::vector<VisualComponent *> _children;
     SDL_Texture * _texture;
     SDL_Rect _body;
     bool _is_hide;
     double _rotation_angle;
+    SDL_Color _color;
 
 protected:
 

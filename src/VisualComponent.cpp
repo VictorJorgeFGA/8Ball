@@ -214,6 +214,16 @@ void VisualComponent::rotateClockwise(double amount)
         child->rotateClockwise(amount);
 }
 
+SDL_Color VisualComponent::getColor() const
+{
+    return _color;
+}
+
+void VisualComponent::setColor(SDL_Color color)
+{
+    _color = color;
+}
+
 void VisualComponent::addChild(VisualComponent * child)
 {
     for (auto e : _children) {
@@ -236,6 +246,8 @@ void VisualComponent::draw()
 {
     if (_texture != nullptr && !_is_hide)
         graphics->drawTexture(_texture, getGlobalBody(), getRotationAngle());
+    else if (_texture == nullptr && !_is_hide)
+        graphics->drawRectangle(getGlobalBody(), _color);
     
     for (auto child : _children)
         child->draw();
@@ -247,7 +259,8 @@ _children(),
 _texture(nullptr),
 _body({0,0,0,0}),
 _is_hide(false),
-_rotation_angle(0.0f)
+_rotation_angle(0.0f),
+_color({0xff, 0xff, 0xff, 0xff})
 {
 
 }
