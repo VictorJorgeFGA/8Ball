@@ -17,26 +17,29 @@ public:
                                 const std::string & font_name = "arial.ttf",
                                 const SDL_Color & font_color = {0xFF,0xFF,0,0xFF},
                                 uint8_t font_size = 16,
-                                int32_t width = 120,
-                                int32_t height = 50 );
+                                uint16_t width = 120,
+                                uint16_t height = 50 );
 
     void setClickReaction(std::function<void()> call_back_function);
 
-    void setWidth(int32_t width);
-    void setHeight(int32_t height);
+    void setWidth(uint16_t width);
+    void setHeight(uint16_t height);
 
 private:
+    Button();
+    Button(const Button & cpy);
+
     std::function<void()> _call_back_function;
     SolidImage * _shade;
     SolidText * _text;
 
 protected:
-    Button();
-    ~Button();
+    Button(uint16_t width, uint16_t height, SDL_Texture * texture = nullptr);
+    virtual ~Button();
 
-    virtual void reactToPressing(const SDL_Point & cursor_coordinates);
-    virtual void reactToReleasing(const SDL_Point & cursor_coordinates);
-    virtual void reactToClick(const SDL_Point & cursor_coordinates);
+    virtual void reactToPressing(const SDL_Point & cursor_coordinates) override;
+    virtual void reactToReleasing(const SDL_Point & cursor_coordinates) override;
+    virtual void reactToClick(const SDL_Point & cursor_coordinates) override;
 }; 
 
 #endif

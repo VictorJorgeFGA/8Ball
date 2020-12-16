@@ -70,6 +70,20 @@ void Graphics::drawRectangle(SDL_Rect rectangle)
     drawRectangle(&rectangle);
 }
 
+void Graphics::drawRectangle(const SDL_Rect * rectangle, SDL_Color color)
+{
+    uint8_t r, g, b, a;
+    SDL_GetRenderDrawColor(_renderer, &r, &g, &b, &a);
+    setDrawColor(color.r, color.g, color.b);
+    drawRectangle(rectangle);
+    setDrawColor(r, g, b);
+}
+
+void Graphics::drawRectangle(SDL_Rect rectangle, SDL_Color color)
+{
+    drawRectangle(&rectangle, color);
+}
+
 void Graphics::hideCursor() const
 {
     SDL_ShowCursor(SDL_DISABLE);

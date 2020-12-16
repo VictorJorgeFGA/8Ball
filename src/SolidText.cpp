@@ -3,24 +3,21 @@
 #include "SDL.hpp"
 #include "SDL_ttf.hpp"
 
-SolidText * SolidText::newSolidText(const std::string & text, const std::string & font_name, uint8_t font_size, SDL_Color color)
+SolidText * SolidText::newSolidText(const std::string & text,
+                                    const std::string & font_name,
+                                    uint8_t font_size,
+                                    SDL_Color color)
 {
-    SolidText * new_text = new SolidText();
 
     AssetsManager * am = AssetsManager::getInstance();
-    new_text->setTexture(am->getTextTexture(font_name, font_size, text, color));
-    
-    int32_t w, h;
-    TTF_SizeText(am->getFont(font_name, font_size), text.c_str(), &w, &h);
-    
-    new_text->setWidth(w);
-    new_text->setHeight(h);
-    new_text->setParent(getScreenObject());
+    int32_t width, height;
+    TTF_SizeText(am->getFont(font_name, font_size), text.c_str(), &width, &height);
 
-    return new_text;
+    return new SolidText(width, height, am->getTextTexture(font_name, font_size, text, color));
 }
 
-SolidText::SolidText():VisualComponent()
+SolidText::SolidText(uint16_t width, uint16_t height, SDL_Texture * texture):
+VisualComponent(width, height, {0xFF, 0xFF, 0xFF, 0xFF}, texture)
 {
 
 }

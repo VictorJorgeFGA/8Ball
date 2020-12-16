@@ -57,6 +57,7 @@ bool PhysicComponent::isStopped() const
 }
 
 PhysicComponent::PhysicComponent():
+InteractiveComponent(0, 0),
 _velocity({0.0, 0.0}),
 _is_ghost(false)
 {

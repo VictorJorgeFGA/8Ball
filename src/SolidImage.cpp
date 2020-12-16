@@ -1,20 +1,13 @@
 #include "SolidImage.hpp"
 #include "AssetsManager.hpp"
 
-SolidImage * SolidImage::newSolidImage(const std::string & image_name, int32_t width, int32_t height)
+SolidImage * SolidImage::newSolidImage(const std::string & image_name, uint16_t width, uint16_t height)
 {
-    AssetsManager * am = AssetsManager::getInstance();
-
-    SolidImage * new_image = new SolidImage();
-    new_image->setTexture(am->getTexture(image_name));
-    new_image->setWidth(width);
-    new_image->setHeight(height);
-    new_image->setParent(getScreenObject());
-
-    return new_image;
+    return new SolidImage(width, height, AssetsManager::getInstance()->getTexture(image_name));
 }
 
-SolidImage::SolidImage():VisualComponent()
+SolidImage::SolidImage(uint16_t width, uint16_t height, SDL_Texture * texture):
+VisualComponent(width, height, {0xFF, 0xFF, 0xFF, 0xFF}, texture)
 {
 
 }

@@ -32,6 +32,7 @@ public:
 private:
     static void emptyCallback(double_t);
 
+    ScrollBar(const ScrollBar & cpy);
     ScrollBar();
     virtual ~ScrollBar();
 

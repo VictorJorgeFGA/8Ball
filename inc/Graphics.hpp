@@ -21,8 +21,12 @@ public:
     void clearScreen();
     void updateScreen();
     void setDrawColor(uint8_t r, uint8_t g, uint8_t b);
+
     void drawRectangle(const SDL_Rect * rectangle);
     void drawRectangle(SDL_Rect rectangle);
+    void drawRectangle(const SDL_Rect * rectangle, SDL_Color color);
+    void drawRectangle(SDL_Rect rectangle, SDL_Color color);
+    
     void hideCursor() const;
     void showCursor() const;
     void maximizeWindow();

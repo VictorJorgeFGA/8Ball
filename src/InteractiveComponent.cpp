@@ -19,13 +19,11 @@ void InteractiveComponent::startUp()
         throw std::runtime_error("InteractiveComponent exception");
     }
 
-    NEUTRAL_COMPONENT = new InteractiveComponent();
+    NEUTRAL_COMPONENT = new InteractiveComponent(0,0);
     NEUTRAL_COMPONENT->deactivate();
     NEUTRAL_COMPONENT->tie();
     NEUTRAL_COMPONENT->setGlobalX(0);
     NEUTRAL_COMPONENT->setGlobalY(0);
-    NEUTRAL_COMPONENT->setWidth(0);
-    NEUTRAL_COMPONENT->setHeight(0);
 
     _selected_component = NEUTRAL_COMPONENT;
     _overlapped_component = NEUTRAL_COMPONENT;
@@ -151,13 +149,13 @@ InteractiveComponent * InteractiveComponent::getComponentByClickCoordinates(cons
     return NEUTRAL_COMPONENT;
 }
 
-InteractiveComponent::InteractiveComponent():
+InteractiveComponent::InteractiveComponent(uint16_t width, uint16_t height, SDL_Color color, SDL_Texture * texture):
+VisualComponent(width, height, color, texture),
 _initial_dragging_position({0,0}),
 _initial_hitbox_position({0,0}),
 _can_drag(true),
 _is_active(true)
 {
-    setParent(getScreenObject());
     _components.push_back(this);
 }
 
