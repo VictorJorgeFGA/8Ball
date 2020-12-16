@@ -25,7 +25,7 @@ void VisualComponent::startUp()
         if (VERBOSE) std::cout << VERBOSE_MSG << "Starting up" << std::endl;
     }
     else
-        throwException("Attempt to initialize ViusualComponent more than once");
+        throwException("Attempt to initialize VisualComponent more than once");
 }
 
 void VisualComponent::shutDown()
@@ -61,7 +61,7 @@ void VisualComponent::setParent(VisualComponent * new_parent)
 {
     if (new_parent == _parent)
         return;
-    else if (new_parent == nullptr)
+    else if (new_parent == nullptr || new_parent == NULL)
         throwException("Attempt to set VisualComponent object parent as nullptr");
     else if (new_parent == this)
         throwException("Attempt to set itself as a parent");
@@ -80,7 +80,7 @@ VisualComponent * VisualComponent::getParent() noexcept
     return _parent;
 }
 
-bool VisualComponent::isAChild(VisualComponent * component)
+bool VisualComponent::isAChild(VisualComponent * component) const noexcept
 {
     for (auto e : _children) {
         if (e == component)
@@ -89,7 +89,7 @@ bool VisualComponent::isAChild(VisualComponent * component)
     return false;
 }
 
-std::vector<VisualComponent *> VisualComponent::getChildren() const
+std::vector<VisualComponent *> VisualComponent::getChildren() const noexcept
 {
     return _children;
 }
