@@ -1,5 +1,7 @@
 #include "VisualComponent.hpp"
 #include "Graphics.hpp"
+#include "Cursor.hpp"
+
 #include <stdexcept>
 #include <iostream>
 
@@ -45,7 +47,9 @@ void VisualComponent::drawComponents()
     if (SCREEN == nullptr)
         throwException("Attempt to draw VisualComponent objects before initialization");
     
+    graphics->clearScreen();
     SCREEN->draw();
+    Cursor::drawCursor();
     graphics->updateScreen();
 }
 
@@ -255,12 +259,6 @@ void VisualComponent::removeChild(VisualComponent * child)
         _children.erase(iter);
 }
 
-void VisualComponent::throwException(const std::string & msg)
-{
-    std::cerr << ERROR_MSG << msg << std::endl;
-    throw std::runtime_error("VisualComponent exception");
-}
-
 void VisualComponent::draw()
 {
     if (_texture != nullptr && !_is_hide)
@@ -270,6 +268,12 @@ void VisualComponent::draw()
     
     for (auto child : _children)
         child->draw();
+}
+
+void VisualComponent::throwException(const std::string & msg)
+{
+    std::cerr << ERROR_MSG << msg << std::endl;
+    throw std::runtime_error("VisualComponent exception");
 }
 
 VisualComponent::VisualComponent():

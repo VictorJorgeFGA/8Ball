@@ -2,6 +2,7 @@
 #include "AssetsManager.hpp"
 #include "SolidImage.hpp"
 #include "SolidText.hpp"
+#include "Cursor.hpp"
 
 #include <iostream>
 
@@ -66,11 +67,13 @@ Button::~Button()
 
 void Button::reactToPressing(const SDL_Point & cursor_coordinates)
 {
+    Cursor::setCursorTexture(Cursor::DARK_CURSOR);
     _shade->show();
 }
 
 void Button::reactToReleasing(const SDL_Point & cursor_coordinates)
 {
+    Cursor::setCursorTexture(Cursor::LIGHT_CURSOR);
     _shade->hide();
 }
 

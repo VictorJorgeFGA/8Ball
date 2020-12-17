@@ -60,6 +60,8 @@ public:
 
     void addChild(VisualComponent * child);
     void removeChild(VisualComponent * child);
+    
+    void draw();
 
 private:
     static VisualComponent * SCREEN;
@@ -69,7 +71,6 @@ private:
     static Graphics * graphics;
     static void throwException(const std::string & msg);
 
-    void draw();
     VisualComponent();
     
     std::vector<VisualComponent *> _children;

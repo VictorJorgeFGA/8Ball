@@ -6,6 +6,7 @@
 #include "Table.hpp"
 #include "SoundManager.hpp"
 #include "ScrollBar.hpp"
+#include "Cursor.hpp"
 
 #include <stdexcept>
 #include <iostream>
@@ -160,6 +161,7 @@ _quit_button(nullptr)
 
     SoundManager::getInstance()->playSong("test_song.ogg");
 
+    Cursor::setCursorTexture(Cursor::LIGHT_CURSOR);
 }
 
 RunningManager::~RunningManager()
