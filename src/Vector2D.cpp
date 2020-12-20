@@ -2,28 +2,32 @@
 
 Vector2D::Vector2D(double_t x, double_t y):
 _x(x),
-_y(y)
+_y(y),
+_mag_changed(true)
 {
 
 }
 
 Vector2D::Vector2D(const Vector2D & v):
 _x(v.x()),
-_y(v.y())
+_y(v.y()),
+_mag_changed(true)
 {
 
 }
 
 Vector2D::Vector2D(const Vector2D && v):
 _x(v.x()),
-_y(v.y())
+_y(v.y()),
+_mag_changed(true)
 {
 
 }
 
 Vector2D::Vector2D(const Vector2D & origin, const Vector2D & arrow):
 _x(arrow.x() - origin.x()),
-_y(arrow.y() - origin.y())
+_y(arrow.y() - origin.y()),
+_mag_changed(true)
 {
 
 }

@@ -2,6 +2,7 @@
 #include "AssetsManager.hpp"
 #include "SolidImage.hpp"
 #include "SolidText.hpp"
+#include "Cursor.hpp"
 
 #include <iostream>
 
@@ -66,15 +67,27 @@ Button::~Button()
 
 void Button::reactToPressing(const SDL_Point & cursor_coordinates)
 {
+    Cursor::setCursorType(Cursor::MOVE);
     _shade->show();
 }
 
 void Button::reactToReleasing(const SDL_Point & cursor_coordinates)
 {
+    Cursor::setCursorType(Cursor::NORMAL_SELECT);
     _shade->hide();
 }
 
 void Button::reactToClick(const SDL_Point & cursor_coordinates)
 {
     _call_back_function();
+}
+
+void Button::reactToCursorOverlappingComponent(const SDL_Point & cursor_coordinates)
+{
+    Cursor::setCursorType(Cursor::LINK_SELECT);
+}
+
+void Button::reactToCursorStopedOverlappingComponent(const SDL_Point & cursor_coordinates)
+{
+    Cursor::setCursorType(Cursor::NORMAL_SELECT);
 }
