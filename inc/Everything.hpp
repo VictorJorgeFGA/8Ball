@@ -17,3 +17,4 @@
 #include "Table.hpp"
 #include "Vector2D.hpp"
 #include "SoundManager.hpp"
+#include "Cursor.hpp"

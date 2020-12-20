@@ -3,19 +3,29 @@
 
 #include "SolidImage.hpp"
 
-#include <string>
 #include <cstdint>
-#include <map>
+#include <vector>
 
 class Cursor
 {
 public:
-    static std::string LIGHT_CURSOR;
-    static std::string DARK_CURSOR;
+    enum CursorType {
+        // DEFAULT CURSOR
+        NORMAL_SELECT = 0,
+        // Used while hovering clickable components
+        LINK_SELECT,
+        // Used while hovering locked/forbidden components
+        UNAVAILABLE,
+        // Used while hovering editable text
+        TEXT_SELECT,
+        // Used while dragging components
+        MOVE,
+        // Used while aiming
+        PRECISION_SELECT
+    };
 
-    static void setCursorTexture(const std::string & texture_name, int32_t x_alignment = 0, int32_t y_alignment = 0);
-    static void setXAlignment(int32_t x_alignment);
-    static void setYAlignment(int32_t y_alignment);
+    static void startUp();
+    static void setCursorType(CursorType cursor_type);
     static void drawCursor();
 
 private:
@@ -24,10 +34,9 @@ private:
 
     static void updateTexturePosition();
 
-    static int32_t _x_alignment;
-    static int32_t _y_alignment;
-    static SolidImage * _cursor_texture;
-    static std::map<std::string, SolidImage *> _available_textures;
+    static int32_t _cursor_side;
+    static CursorType _cursor_type;
+    static std::vector<SolidImage *> _cursors;
 
 protected:
 

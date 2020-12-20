@@ -40,6 +40,8 @@ protected:
     virtual void reactToPressing(const SDL_Point & cursor_coordinates) override;
     virtual void reactToReleasing(const SDL_Point & cursor_coordinates) override;
     virtual void reactToClick(const SDL_Point & cursor_coordinates) override;
+    virtual void reactToCursorOverlappingComponent(const SDL_Point & cursor_coordinates) override;
+    virtual void reactToCursorStopedOverlappingComponent(const SDL_Point & cursor_coordinates) override;
 }; 
 
 #endif

@@ -160,8 +160,6 @@ _quit_button(nullptr)
     Ball::newBall(2.85, _table->getTableCenter() + Vector2D(40.0, 0.0), 1)->setVelocity({-50.0, 0.0});
 
     SoundManager::getInstance()->playSong("test_song.ogg");
-
-    Cursor::setCursorTexture(Cursor::LIGHT_CURSOR);
 }
 
 RunningManager::~RunningManager()
