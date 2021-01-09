@@ -6,6 +6,7 @@
 
 class Ball;
 class Cushion;
+class Pocket;
 
 class PhysicWorld
 {
@@ -16,6 +17,9 @@ public:
 
     void addCushion(Cushion * cushion);
     void removeCushion(Cushion * cushion);
+
+    void addPocket(Pocket * pocket);
+    void removePocket(Pocket * pocket);
 
     void setFrictionCoefficient(double value);
     double_t getFrictionCoefficient() const;
@@ -38,9 +42,12 @@ private:
     void collideBallToCushion(Ball * ball, Cushion * cushion);
     void makePerfectBallToCushionContact(Ball * ball, Cushion * cushion);
 
+    void collideBallToPocket(Ball * ball, Pocket * pocket);
+
     double _friction_coefficient;
     std::vector<Ball *> _balls;
     std::vector<Cushion *> _cushions;
+    std::vector<Pocket *> _pockets;
 
     PhysicWorld();
     ~PhysicWorld();

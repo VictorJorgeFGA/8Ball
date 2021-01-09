@@ -7,6 +7,7 @@
 #include "SoundManager.hpp"
 #include "ScrollBar.hpp"
 #include "Cursor.hpp"
+#include "Pocket.hpp"
 
 #include <stdexcept>
 #include <iostream>
@@ -158,6 +159,8 @@ _quit_button(nullptr)
     Ball::newBall(2.85, _table->getTableCenter() + Vector2D(20.0, 0.0), 1)->setVelocity({0.0, -55.0});
     Ball::newBall(2.85, _table->getTableCenter() + Vector2D(30.0, 0.0), 1)->setVelocity({55.0, 0.0});
     Ball::newBall(2.85, _table->getTableCenter() + Vector2D(40.0, 0.0), 1)->setVelocity({-50.0, 0.0});
+
+    Pocket::enablePocketChoice();
 
     SoundManager::getInstance()->playSong("test_song.ogg");
 }

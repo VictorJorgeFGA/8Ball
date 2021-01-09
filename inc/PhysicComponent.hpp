@@ -34,7 +34,6 @@ private:
 protected:
     PhysicComponent();
     virtual ~PhysicComponent();
-
 };
 
 #endif

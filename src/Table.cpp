@@ -2,6 +2,7 @@
 #include "PhysicComponent.hpp"
 #include "AssetsManager.hpp"
 #include "Cushion.hpp"
+#include "Pocket.hpp"
 
 Table * Table::newTable()
 {
@@ -61,7 +62,16 @@ _top_left(Vector2D(0.0, 0.0))
     _bot_cushion->deactivate();
     _left_cushion->deactivate();
 
+    //Pockets initialization
+    _top_left_pocket = Pocket::newPocket({19.0 - 5.85, 19.0 - 5.85}, 11.7);
+    _bot_left_pocket = Pocket::newPocket({19.0 - 5.85, 70.0}, 11.7);
+    _top_mid_pocket = Pocket::newPocket({90.0, 19.0 - 5.85}, 11.7);
+    _bot_mid_pocket = Pocket::newPocket({90.0, 70.0}, 11.7);
+    _top_right_pocket = Pocket::newPocket({180.0, 19.0 - 5.85}, 11.7);
+    _bot_right_pocket = Pocket::newPocket({180.0, 70.0}, 11.7);
+
     setPosition(_top_left);
+    InteractiveComponent::deactivate();
 }
 
 Table::~Table()

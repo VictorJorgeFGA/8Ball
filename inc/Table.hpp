@@ -3,6 +3,7 @@
 
 #include "PhysicComponent.hpp"
 #include "Cushion.hpp"
+#include "Pocket.hpp"
 
 #include <vector>
 
@@ -30,6 +31,13 @@ private:
     Cushion * _right_cushion;
     Cushion * _bot_cushion;
     Cushion * _left_cushion;
+
+    Pocket * _top_left_pocket;
+    Pocket * _bot_left_pocket;
+    Pocket * _top_mid_pocket;
+    Pocket * _bot_mid_pocket;
+    Pocket * _top_right_pocket;
+    Pocket * _bot_right_pocket;
 };
 
 #endif

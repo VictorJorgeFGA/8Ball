@@ -4,7 +4,7 @@
 
 Cushion * Cushion::newCushion(double_t width, double_t height, const Vector2D & top_left_point)
 {
-    return new Cushion(width, height, top_left_point);;
+    return new Cushion(width, height, top_left_point);
 }
 
 void Cushion::setPostion(const Vector2D & top_left_point)

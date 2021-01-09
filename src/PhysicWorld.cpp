@@ -1,6 +1,7 @@
 #include "PhysicWorld.hpp"
 #include "Ball.hpp"
 #include "Cushion.hpp"
+#include "Pocket.hpp"
 #include "SoundManager.hpp"
 
 #include <iostream>
@@ -56,6 +57,29 @@ void PhysicWorld::removeCushion(Cushion * cushion)
     _cushions.erase(iter);
 }
 
+void PhysicWorld::addPocket(Pocket * new_pocket)
+{
+    for (auto pocket : _pockets) {
+        if (new_pocket == pocket)
+            return;
+    }
+    _pockets.push_back(new_pocket);
+}
+
+void PhysicWorld::removePocket(Pocket * pocket)
+{
+    auto iter = _pockets.begin();
+    while (true) {
+        if (iter == _pockets.end())
+            return;
+        else if (*iter == pocket)
+            break;
+        else
+            iter++;
+    }
+    _pockets.erase(iter);
+}
+
 void PhysicWorld::setFrictionCoefficient(double_t value)
 {
     _friction_coefficient = value;
@@ -75,13 +99,33 @@ void PhysicWorld::updateWorldObjects(double_t delta_time)
 
 void PhysicWorld::resolveCollisions()
 {
-    for (int32_t i = 0; i < (int32_t) _balls.size(); i++)
-        for (int32_t j = i + 1; j < (int32_t) _balls.size(); j++)
+    for (auto ball : _balls) {
+        if (ball->isGhost())
+            continue;
+
+        for (auto pocket : _pockets)
+            collideBallToPocket(ball, pocket);
+    }
+
+    for (int32_t i = 0; i < (int32_t) _balls.size(); i++) {
+        if (_balls[i]->isGhost())
+            continue;
+
+        for (int32_t j = i + 1; j < (int32_t) _balls.size(); j++) {
+            if (_balls[j]->isGhost())
+                continue;
+                    
             collideBallToBall(_balls[i], _balls[j]);
+        }
+    }
     
-    for (auto ball : _balls)
+    for (auto ball : _balls) {
+        if (ball->isGhost())
+            continue;
+
         for (auto cushion : _cushions)
             collideBallToCushion(ball, cushion);
+    }
 }
 
 void PhysicWorld::applyFrictionForce(double_t delta_time)
@@ -180,6 +224,14 @@ void PhysicWorld::collideBallToCushion(Ball * ball, Cushion * cushion)
         double_t time = -abs(delta_x / ball->getVelocity().x());
         ball->translate(ball->getVelocity() * time);
         ball->setVelocity({-ball->getVelocity().x(), ball->getVelocity().y()});
+    }
+}
+
+void PhysicWorld::collideBallToPocket(Ball * ball, Pocket * pocket)
+{
+    if (ball->getCenter().distance(pocket->getCenter()) < ball->getRadius() + pocket->getRadius()) {
+        ball->setCenter({0.0, 0.0});
+        ball->enableGhost();
     }
 }
 
